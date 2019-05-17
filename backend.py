@@ -35,7 +35,7 @@ def dbQ(query,args):
         cursor.close()
         connect.close()
 
-    result = list(result)
+    #result = list(result)
     return result
 
 #Register function, adds valid information to database
@@ -48,7 +48,7 @@ def register(username,email,password):
     searchPass = re.match(r'[A-Za-z0-9@#$%^&+=]{8,}', password)
     #returns json error object if criteria are not met
     if (len(username) < 5 or len(username) > 13) and (not searchEmail) and (not searchPass):
-        print('{"err":true}')
+        print('{"err":"Invalid registration information"}')
     else: #Adds information to database and returns json confirmation object
         query = "INSERT INTO accounts(username,email,password) " \
                 "VALUES(%s,%s,%s)"
@@ -71,7 +71,6 @@ def register(username,email,password):
 
 #Login function, returns account_id connected to valid username and password
 def login(username,password):
-    result = []
     query = "SELECT account_id FROM accounts WHERE username = %s AND password = %s"
     args = (username,password)
     uid = dbQ(query,args)
@@ -79,12 +78,21 @@ def login(username,password):
         uidInt = json.dumps(uid[0])
         print('{ "account_id":', uidInt[1], '}')
     else:
-        print('{"err":true}')
+        print('{"err":"Invalid login information"}')
 
 def getProfiles(accId):
+    query = "SELECT profile_id, title FROM profiles WHERE account_id = %s"
+    args = (accId)
+    profiles = dbQ(query,args)
+    print(json.dumps(profiles))
+
+def insertProfile(accId,jsonStr):
     pass
 
-def getCards(accId):
+def getCards(profId):
+    pass
+
+def insertCard(profId,jsonStr):
     pass
 
 #Takes form data sent from app and runs related function(s)
@@ -103,8 +111,8 @@ elif actionType == 'getProfiles':
     accId = form.getvalue('account_id')
     getProfiles(accId)
 elif actionType == 'getCards':
-    accId = form.getvalue('account_id')
-    getCards(accId)
+    profId = form.getvalue('profile_id')
+    getCards(profId)
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
