@@ -99,6 +99,12 @@ elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
+elif actionType == 'getProfiles':
+    accId = form.getvalue('account_id')
+    getProfiles(accId)
+elif actionType == 'getCards':
+    accId = form.getvalue('account_id')
+    getCards(accId)
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
