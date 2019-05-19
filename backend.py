@@ -1,6 +1,10 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,json,re
+import cgi,cgitb,re
+try:
+    import simplejson as json
+except ImportError:
+    import json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
@@ -9,7 +13,7 @@ from pythonMySQL_dbConfig import readDbConfig
 print('Content-type: application/json\n')
 
 #Function to set grab size for querying with fetchmany() in dbQ()
-def iterRow(cursor, size):
+def iterRow(cursor,size):
     while True:
         rows = cursor.fetchmany(size)
         if not rows:
@@ -18,14 +22,17 @@ def iterRow(cursor, size):
             yield row
 
 #Function takes query and arguments as parameters and returns result as list
-def dbQ(query,args):
+def dbQ(query,args=None):
     result = []
     try:
         dbconfig = readDbConfig()
         connect = MySQLConnection(**dbconfig)
 
         cursor = connect.cursor()
-        cursor.execute(query,args)
+        if args == None:
+            cursor.execute(query)
+        else:
+            cursor.execute(query,args)
 
         for row in iterRow(cursor,10):
             result.append(row)
@@ -35,7 +42,6 @@ def dbQ(query,args):
         cursor.close()
         connect.close()
 
-    #result = list(result)
     return result
 
 #Register function, adds valid information to database
@@ -81,12 +87,21 @@ def login(username,password):
         print('{"err":"Invalid login information"}')
 
 def getProfiles(accId):
-    query = "SELECT profile_id, title FROM profiles WHERE account_id = %s"
-    args = (accId)
-    profiles = dbQ(query,args)
-    print(json.dumps(profiles))
+    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
+    profiles = dbQ(query)
+    print('{"Profiles": [ ', end='')
+    if len(profiles) == 1:
+        print('{"profile_id": ' + str(profiles[0][0]) + ', ' + profiles[0][1][1:] + ' ]', end='')
+    else:
+        for i in range(len(profiles)):
+            if profiles[i] == profiles[-1]:
+                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ' ]', end='')
+            else:
+                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ', end='')
+    print('}')
 
 def insertProfile(accId,jsonStr):
+    #Get all profile ids and add one to it to make new profile id. Then generate json string based on that and insert into profiles
     pass
 
 def getCards(profId):
@@ -109,6 +124,7 @@ elif actionType == 'login':
     login(username,password)
 elif actionType == 'getProfiles':
     accId = form.getvalue('account_id')
+    accId = int(accId)
     getProfiles(accId)
 elif actionType == 'getCards':
     profId = form.getvalue('profile_id')
