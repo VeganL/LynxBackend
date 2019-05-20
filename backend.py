@@ -90,11 +90,8 @@ def getProfiles(accId):
                 print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ', end='')
     print(']}')
 
-def insertProfile(jsonStr):
-    pyDict = json.loads(jsonStr)
-    accId = pyDict['account_id']
-    profDesc = pyDict['profileName']
-    title = '{"profileName": "' + profDesc + '"}'
+def insertProfile(accId,profileName):
+    title = '{"profileName": "' + profileName + '"}'
     query = "INSERT INTO profiles(account_id,title) " \
             "VALUES(%s,%s)"
     args = (accId,title)
@@ -126,8 +123,9 @@ elif actionType == 'get_card_ids':
     profId = form.getvalue('profile_id')
     getCardIds(profId)
 elif actionType == 'insert_profile':
-    jsonStr = form.getvalue('json_str')
-    insertProfile(jsonStr)
+    accId = form.getvalue('account_id')
+    profileName = form.getvalue('profile_name')
+    insertProfile(accId,profileName)
 elif actionType == 'insert_card':
     profId = form.getvalue('profile_id')
     cardAttr = form.getvalue('card_attrib')
