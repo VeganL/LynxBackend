@@ -1,10 +1,6 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,re
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import cgi,cgitb,re,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
@@ -87,7 +83,7 @@ def login(username,password):
         print('{"err":"Invalid login information"}')
 
 def getProfiles(accId):
-    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
+    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + accId
     profiles = dbQ(query)
     print('{"Profiles": [ ', end='')
     if len(profiles) == 1:
@@ -102,6 +98,7 @@ def getProfiles(accId):
 
 def insertProfile(accId,jsonStr):
     #Get all profile ids and add one to it to make new profile id. Then generate json string based on that and insert into profiles
+
     pass
 
 def getCards(profId):
@@ -124,11 +121,19 @@ elif actionType == 'login':
     login(username,password)
 elif actionType == 'getProfiles':
     accId = form.getvalue('account_id')
-    accId = int(accId)
+    #accId = int(accId)
     getProfiles(accId)
 elif actionType == 'getCards':
     profId = form.getvalue('profile_id')
     getCards(profId)
+elif actionType == 'insertProfile':
+    accId = form.getvalue('account_id')
+    profDesc = form.getvalue('prof_desc')
+    insertProfile(accId,profDesc)
+elif actionType == 'insertCard':
+    profId = form.getvalue('profile_id')
+    cardAttr = form.getvalue('card_attrib')
+    insertCard(profId,cardAttr)
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
