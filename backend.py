@@ -17,6 +17,25 @@ def iterRow(cursor,size):
         for row in rows:
             yield row
 
+def dbIns(query,args=None):
+    try:
+        dbconfig = readDbConfig()
+        connect = MySQLConnection(**dbconfig)
+
+        cursor = connect.cursor()
+        if args == None:
+            cursor.execute(query)
+        else:
+            cursor.execute(query,args)
+
+        connect.commit()
+        print('{"err":false}')
+    except:
+        print('{"err":true}')
+    finally:
+        cursor.close()
+        connect.close()
+
 #Function takes query and arguments as parameters and returns result as list
 def dbQ(query,args=None):
     result = []
@@ -32,44 +51,19 @@ def dbQ(query,args=None):
 
         for row in iterRow(cursor,10):
             result.append(row)
-    except Error as e:
-        print(e)
+    except:
+        print('{"err":true}')
     finally:
         cursor.close()
         connect.close()
-
-    return result
+        return result
 
 #Register function, adds valid information to database
 def register(username,email,password):
-    username = str(username)
-    email = str(email)
-    password = str(password)
-    #Regexes for verifying inputted email data and password data meet criteria
-    searchEmail = re.search("^[a-z0-9]+[\.'\-a-z0-9_]*[a-z0-9]+@(gmail|googlemail)\.com$", email.lower())
-    searchPass = re.match(r'[A-Za-z0-9@#$%^&+=]{8,}', password)
-    #returns json error object if criteria are not met
-    if (len(username) < 5 or len(username) > 13) and (not searchEmail) and (not searchPass):
-        print('{"err":"Invalid registration information"}')
-    else: #Adds information to database and returns json confirmation object
-        query = "INSERT INTO accounts(username,email,password) " \
-                "VALUES(%s,%s,%s)"
-        args = (username,email,password)
-
-        try:
-            dbconfig = readDbConfig()
-            connect = MySQLConnection(**dbconfig)
-
-            cursor = connect.cursor()
-            cursor.execute(query,args)
-
-            connect.commit()
-        except Error as e:
-            print(e)
-        finally:
-            cursor.close()
-            connect.close()
-        print('{"err":false}')
+    query = "INSERT INTO accounts(username,email,password) " \
+            "VALUES(%s,%s,%s)"
+    args = (username,email,password)
+    dbIns(query,args)
 
 #Login function, returns account_id connected to valid username and password
 def login(username,password):
@@ -87,22 +81,28 @@ def getProfiles(accId):
     profiles = dbQ(query)
     print('{"Profiles": [ ', end='')
     if len(profiles) == 1:
-        print('{"profile_id": ' + str(profiles[0][0]) + ', ' + profiles[0][1][1:] + ' ]', end='')
+        print('{"profile_id": ' + str(profiles[0][0]) + ', ' + profiles[0][1][1:], end='')
     else:
         for i in range(len(profiles)):
             if profiles[i] == profiles[-1]:
-                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ' ]', end='')
+                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:], end='')
             else:
                 print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ', end='')
-    print('}')
+    print(']}')
 
-def insertProfile(accId,jsonStr):
-    #Get all profile ids and add one to it to make new profile id. Then generate json string based on that and insert into profiles
+def insertProfile(jsonStr):
+    pyDict = json.loads(jsonStr)
+    accId = pyDict['account_id']
+    profDesc = pyDict['profileName']
+    title = '{"profileName": "' + profDesc + '"}'
+    query = "INSERT INTO profiles(account_id,title) " \
+            "VALUES(%s,%s)"
+    args = (accId,title)
+    dbIns(query,args)
 
-    pass
-
-def getCards(profId):
-    pass
+def getCardIds(profId):
+    query = "SELECT card_id, name FROM cards WHERE profile_id = " + profId
+    cards = dbQ(query)
 
 def insertCard(profId,jsonStr):
     pass
@@ -119,18 +119,16 @@ elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
-elif actionType == 'getProfiles':
+elif actionType == 'get_profiles':
     accId = form.getvalue('account_id')
-    #accId = int(accId)
     getProfiles(accId)
-elif actionType == 'getCards':
+elif actionType == 'get_card_ids':
     profId = form.getvalue('profile_id')
-    getCards(profId)
-elif actionType == 'insertProfile':
-    accId = form.getvalue('account_id')
-    profDesc = form.getvalue('prof_desc')
-    insertProfile(accId,profDesc)
-elif actionType == 'insertCard':
+    getCardIds(profId)
+elif actionType == 'insert_profile':
+    jsonStr = form.getvalue('json_str')
+    insertProfile(jsonStr)
+elif actionType == 'insert_card':
     profId = form.getvalue('profile_id')
     cardAttr = form.getvalue('card_attrib')
     insertCard(profId,cardAttr)
