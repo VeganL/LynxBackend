@@ -5,6 +5,8 @@ cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
 
+insCounter = 0
+
 #Defines resulting page/text as json format 
 print('Content-type: application/json\n')
 
@@ -18,6 +20,7 @@ def iterRow(cursor,size):
             yield row
 
 def dbIns(query,args=None):
+    global insCounter
     try:
         dbconfig = readDbConfig()
         connect = MySQLConnection(**dbconfig)
@@ -29,7 +32,9 @@ def dbIns(query,args=None):
             cursor.execute(query,args)
 
         connect.commit()
-        print('{"err":false}')
+        if insCounter == 0:
+            print('{"err":false}')
+            insCounter += 1
     except:
         print('{"err":true}')
     finally:
