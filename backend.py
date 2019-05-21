@@ -107,6 +107,7 @@ def insertProfile(accId,profileName):
 def getProfileCards(profId):
     query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
+    #INCOMPLETE
 
 def insertProfileCard(profId,jsonStr):
     pass
@@ -124,7 +125,12 @@ def getProfileAttributes(profId):
     print(jsonStr)
 
 def insertProfileAttributes(profId,jsonStr):
-    pass
+    pyDict = json.loads(jsonStr)
+    for key, value in pyDict.items():
+        query = "INSERT INTO attributes(profile_id,attribute) " \
+                "VALUES(%s,%s)"
+        args = (profId,'{"' + key + '":"' + value + '"}')
+        dbIns(query,args)
 
 def getWallet():
     pass
@@ -146,31 +152,33 @@ if actionType == 'register': ### ACCOUNT INITIATION FUNCTIONS
     email = form.getvalue('email')
     password = form.getvalue('password')
     register(username,email,password)
+    #DONE
 elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
+    #DONE
 elif actionType == 'get_profiles': ### PROFILE FUNCTIONS
     accId = form.getvalue('account_id')
     getProfiles(accId)
+    #DONE
 elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
     profileName = form.getvalue('profile_name')
     insertProfile(accId,profileName)
+    #DONE
 elif actionType == 'get_profile_cards': # PROFILE CARDS
-    profId = form.getvalue('profile_id')
-    getProfileCards(profId)
+    pass
 elif actionType == 'insert_profile_card':
-    profId = form.getvalue('profile_id')
-    cardAttr = form.getvalue('card_attrib')
-    insertProfileCard(profId,cardAttr)
+    pass
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
-    #gets profile's attributes from database
     profId = form.getvalue('profile_id')
     getProfileAttributes(profId)
+    #DONE
 elif actionType == 'insert_profile_attributes':
-    #inserts profile attribute(s) into database
-    pass
+    profId = form.getvalue('profile_id')
+    jsonStr = form.getvalue('attr_2_ins')
+    insertProfileAttributes(profId,jsonStr)
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
     #gets cards in account's wallet
     pass
