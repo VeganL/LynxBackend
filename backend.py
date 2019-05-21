@@ -107,16 +107,25 @@ def insertProfile(accId,profileName):
     dbIns(query,args)
 
 def getProfileCards(profId):
-    query = "SELECT card_id, name FROM cards WHERE profile_id = " + profId
+    query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
 
 def insertProfileCard(profId,jsonStr):
     pass
 
-def getProfileAttributes():
-    pass
+def getProfileAttributes(profId):
+    query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
+    result = dbQ(query)
+    jsonStr = '{"profile' + profId + '_attributes": ['
+    for i in range(len(result)):
+        if result[i] == result[-1]:
+            jsonStr += '{"attribute_id":' + str(result[i][0]) + ', ' + result[i][1][1:]
+        else:
+            jsonStr += '{"attribute_id":' + str(result[i][0]) + ', ' + result[i][1][1:] + ', '
+    jsonStr += ']}'
+    print(jsonStr)
 
-def insertProfileAttributes():
+def insertProfileAttributes(profId,jsonStr):
     pass
 
 def getWallet():
@@ -159,7 +168,8 @@ elif actionType == 'insert_profile_card':
     insertProfileCard(profId,cardAttr)
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     #gets profile's attributes from database
-    pass
+    profId = form.getvalue('profile_id')
+    getProfileAttributes(profId)
 elif actionType == 'insert_profile_attributes':
     #inserts profile attribute(s) into database
     pass
