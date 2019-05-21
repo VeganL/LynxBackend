@@ -88,7 +88,13 @@ def login(username,password):
 def getProfiles(accId):
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + accId
     profiles = dbQ(query)
-    print('{"Profiles": [ ', end='')
+    jsonStr = '{"Profiles": ['
+    for i in range(len(profiles)):
+        if profiles[i] == profiles[-1]:
+            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:]
+        else:
+            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', '
+    '''print('{"Profiles": [ ', end='')
     if len(profiles) == 1:
         print('{"profile_id": ' + str(profiles[0][0]) + ', ' + profiles[0][1][1:], end='')
     else:
@@ -97,7 +103,9 @@ def getProfiles(accId):
                 print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:], end='')
             else:
                 print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ', end='')
-    print(']}')
+    print(']}')'''
+    jsonStr += ']}'
+    print(jsonStr)
 
 def insertProfile(accId,profileName):
     title = '{"profileName": "' + profileName + '"}'
