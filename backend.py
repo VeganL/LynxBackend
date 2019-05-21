@@ -4,7 +4,6 @@ import cgi,cgitb,re,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
-from pythonEmailConfig import readEmailConfig
 
 #Defines resulting page/text as json format 
 print('Content-type: application/json\n')
@@ -107,17 +106,35 @@ def insertProfile(accId,profileName):
     args = (accId,title)
     dbIns(query,args)
 
-def getCardIds(profId):
+def getProfileCards(profId):
     query = "SELECT card_id, name FROM cards WHERE profile_id = " + profId
     cards = dbQ(query)
 
-def insertCard(profId,jsonStr):
+def insertProfileCard(profId,jsonStr):
+    pass
+
+def getProfileAttributes():
+    pass
+
+def insertProfileAttributes():
+    pass
+
+def getWallet():
+    pass
+
+def getCardQr():
+    pass
+
+def addCardWalletConf():
+    pass
+
+def removeCardWallet():
     pass
 
 #Takes form data sent from app and runs related function(s)
 form = cgi.FieldStorage()
 actionType = form.getvalue('type')
-if actionType == 'register':
+if actionType == 'register': ### ACCOUNT INITIATION FUNCTIONS
     username = form.getvalue('username')
     email = form.getvalue('email')
     password = form.getvalue('password')
@@ -126,20 +143,38 @@ elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
-elif actionType == 'get_profiles':
+elif actionType == 'get_profiles': ### PROFILE FUNCTIONS
     accId = form.getvalue('account_id')
     getProfiles(accId)
-elif actionType == 'get_card_ids':
-    profId = form.getvalue('profile_id')
-    getCardIds(profId)
 elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
     profileName = form.getvalue('profile_name')
     insertProfile(accId,profileName)
-elif actionType == 'insert_card':
+elif actionType == 'get_profile_cards': # PROFILE CARDS
+    profId = form.getvalue('profile_id')
+    getProfileCards(profId)
+elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     cardAttr = form.getvalue('card_attrib')
-    insertCard(profId,cardAttr)
+    insertProfileCard(profId,cardAttr)
+elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
+    #gets profile's attributes from database
+    pass
+elif actionType == 'insert_profile_attributes':
+    #inserts profile attribute(s) into database
+    pass
+elif actionType == 'get_wallet': ### WALLET FUNCTIONS
+    #gets cards in account's wallet
+    pass
+elif actionType == 'get_card_qr':
+    #automates card download process 
+    pass
+elif actionType == 'add_card_wallet_conf':
+    #confirmation that card has been added to wallet
+    pass
+elif actionType == 'remove_card_wallet':
+    #removes a card from account's wallet
+    pass
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
