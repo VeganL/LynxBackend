@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,re,json,smtplib
+import cgi,cgitb,re,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
@@ -70,17 +70,10 @@ def register(username,email,password):
     elif len(emailTaken) > 0:
         print('{"err":"An account is already registered to this E-mail address"}')
     else:
-        '''server = smtplib.SMTP('smtp.gmail.com', 587)
-        emailconfig = readEmailConfig()
-        server.login(emailconfig['email'],emailconfig['password'])
-        msg = "[Lynx] E-mail Confirmation\nHey, " + username + ". Please use the following link to verify your email and finish setting up your account: http://lynx.lroy.us/cgi-bin/emailConfirmation?username=" + username + "&email=" + email
-        server.sendmail(emailconfig['email'],email,msg)'''
-
         query = "INSERT INTO accounts(username,email,password) " \
                 "VALUES(%s,%s,%s)"
         args = (username,email,password)
         dbIns(query,args)
-        #print('{"msg":"Please check your E-mail to verify your account"}')
 
 #Login function, returns account_id connected to valid username and password
 def login(username,password):
