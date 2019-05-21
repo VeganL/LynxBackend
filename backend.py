@@ -94,16 +94,6 @@ def getProfiles(accId):
             jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:]
         else:
             jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', '
-    '''print('{"Profiles": [ ', end='')
-    if len(profiles) == 1:
-        print('{"profile_id": ' + str(profiles[0][0]) + ', ' + profiles[0][1][1:], end='')
-    else:
-        for i in range(len(profiles)):
-            if profiles[i] == profiles[-1]:
-                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:], end='')
-            else:
-                print('{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ', end='')
-    print(']}')'''
     jsonStr += ']}'
     print(jsonStr)
 
