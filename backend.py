@@ -1,13 +1,13 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,json
+import cgi,cgitb,re,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
 
 insCounter = 0
 
-#Defines resulting page/text as json format 
+#Defines resulting page/text as json format
 print('Content-type: application/json\n')
 
 #Function to set grab size for querying with fetchmany() in dbQ()
@@ -24,13 +24,13 @@ def dbIns(query,args=None):
     try:
         dbconfig = readDbConfig()
         connect = MySQLConnection(**dbconfig)
-
+        
         cursor = connect.cursor()
         if args == None:
             cursor.execute(query)
         else:
             cursor.execute(query,args)
-
+        
         connect.commit()
         if insCounter == 0:
             print('{"err":false}')
@@ -47,13 +47,13 @@ def dbQ(query,args=None):
     try:
         dbconfig = readDbConfig()
         connect = MySQLConnection(**dbconfig)
-
+        
         cursor = connect.cursor()
         if args == None:
             cursor.execute(query)
         else:
             cursor.execute(query,args)
-
+        
         for row in iterRow(cursor,10):
             result.append(row)
     except:
@@ -75,7 +75,7 @@ def register(username,email,password):
         print('{"err":"An account is already registered to this E-mail address"}')
     else:
         query = "INSERT INTO accounts(username,email,password) " \
-                "VALUES(%s,%s,%s)"
+            "VALUES(%s,%s,%s)"
         args = (username,email,password)
         dbIns(query,args)
 
@@ -105,17 +105,32 @@ def getProfiles(accId):
 def insertProfile(accId,profileName):
     title = '{"profileName": "' + profileName + '"}'
     query = "INSERT INTO profiles(account_id,title) " \
-            "VALUES(%s,%s)"
+        "VALUES(%s,%s)"
     args = (accId,title)
     dbIns(query,args)
 
+# I DONT KNOW HOW TO TEST
+# prints json with card_id s from the profile with the given profile_id
 def getProfileCards(profId):
     query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
     #INCOMPLETE
+    jsonStr = '{"Cards": ['
+    for i in range(len(cards)):
+        if cards[i] == cards[-1]:
+            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
+        else:
+            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
+    jsonStr += ']}'
+    print(jsonStr)
 
-def insertProfileCard(profId,jsonStr):
-    pass
+# DONT KNOW HOW TO TEST
+# Inserts new card_id into cards table with the given profile_id
+def insertProfileCard(profId,cardName):
+    title = '{"cardName": "' + cardName} + '"}'
+    query = "INSERT INTO cards(profile_id,title) VALUES(%s,%s)"
+    args = (profId,title)
+    dbIns(query,args)
 
 def getProfileAttributes(profId):
     query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
@@ -133,17 +148,29 @@ def insertProfileAttributes(profId,jsonStr):
     pyDict = json.loads(jsonStr)
     for key, value in pyDict.items():
         query = "INSERT INTO attributes(profile_id,attribute) " \
-                "VALUES(%s,%s)"
+            "VALUES(%s,%s)"
         args = (profId,'{"' + key + '":"' + value + '"}')
         dbIns(query,args)
 
-def getWallet():
-    pass
+# DONT KNOW HOW TO TEST
+# prints list of card_id that have been shared with given account_id
+def getWallet(accId):
+    query = "SELECT card_id, name FROM account_cards WHERE account_id = " + str(accId)
+    cards = dbQ(query)
+    jsonStr = '{"wallet": ['
+    for i in range(len(cards)):
+        if cards[i] == cards[-1]:
+            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
+        else:
+            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
+    jsonStr += ']}'
+    print(jsonStr)
 
 def getCardQr():
     pass
 
-def addCardWalletConf():
+def addCardWalletConf(accId,cardId):
+    query = "INSERT INTO account_cards(acc_id, card_id) VALUES()"
     pass
 
 def removeCardWallet():
@@ -157,38 +184,44 @@ if actionType == 'register': ### ACCOUNT INITIATION FUNCTIONS
     email = form.getvalue('email')
     password = form.getvalue('password')
     register(username,email,password)
-    #DONE
+#DONE
 elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
-    #DONE
+#DONE
 elif actionType == 'get_profiles': ### PROFILE FUNCTIONS
     accId = form.getvalue('account_id')
     getProfiles(accId)
-    #DONE
+#DONE
 elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
     profileName = form.getvalue('profile_name')
     insertProfile(accId,profileName)
-    #DONE
+#DONE
 elif actionType == 'get_profile_cards': # PROFILE CARDS
-    pass
+    profId = form.getvalue('profile_id')
+    getProfileCards(profId)
+#REQUIRES TESTING
 elif actionType == 'insert_profile_card':
-    pass
+    profId = form.getvalue('profile_id')
+    cardName = form.getvalue('card_name')\
+    insertProfile(profId,cardName)
+#REQURES TESTING
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
     getProfileAttributes(profId)
-    #DONE
+#DONE
 elif actionType == 'insert_profile_attributes':
     profId = form.getvalue('profile_id')
     jsonStr = form.getvalue('attr_2_ins')
     insertProfileAttributes(profId,jsonStr)
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
-    #gets cards in account's wallet
-    pass
+    accId = form.getvalue('account_id')
+    getWallet(accId)
+#REQUIRES TESTING
 elif actionType == 'get_card_qr':
-    #automates card download process 
+    #automates card download process
     pass
 elif actionType == 'add_card_wallet_conf':
     #confirmation that card has been added to wallet
