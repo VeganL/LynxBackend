@@ -127,7 +127,7 @@ def getProfileCards(profId):
 # DONT KNOW HOW TO TEST
 # Inserts new card_id into cards table with the given profile_id
 def insertProfileCard(profId,cardName):
-    title = '{"cardName": "' + cardName} + '"}'
+    title = '{"cardName": "' + cardName + '"}'
     query = "INSERT INTO cards(profile_id,title) VALUES(%s,%s)"
     args = (profId,title)
     dbIns(query,args)
