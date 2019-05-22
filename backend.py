@@ -160,13 +160,13 @@ def getWallet(accId):
     jsonStr = '{"wallet": ['
     for i in range(len(cards)):
         if cards[i] == cards[-1]:
-            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
+            jsonStr += '{"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
         else:
-            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
+            jsonStr += '{"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
     jsonStr += ']}'
     print(jsonStr)
 
-def getCardQr():
+def getCardQr(jsonStr):
     pass
 
 def addCardWalletConf(accId,cardId):
@@ -210,7 +210,7 @@ elif actionType == 'get_profile_cards': # PROFILE CARDS
 elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     cardName = form.getvalue('card_name')
-    insertProfile(profId,cardName)
+    insertProfileCard(profId,cardName)
 #REQURES TESTING
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
