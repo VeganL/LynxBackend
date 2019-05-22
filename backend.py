@@ -169,7 +169,7 @@ def getCardQr(jsonStr):
 
 # inserts a row into account_cards
 def addCardWalletConf(accId,cardId):
-    query = "INSERT INTO account_cards(acc_id, card_id) VALUES(%s,%s)"
+    query = "INSERT INTO account_cards(account_id, card_id) VALUES(%s,%s)"
     args = (accId,cardId)
     dbIns(query,args)
 
