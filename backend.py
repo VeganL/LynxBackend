@@ -170,8 +170,12 @@ def getCardQr():
     pass
 
 def addCardWalletConf(accId,cardId):
-    query = "INSERT INTO account_cards(acc_id, card_id) VALUES()"
-    pass
+    '''
+        Code for adding a card to the wallet:
+    query = "INSERT INTO account_cards(acc_id, card_id) VALUES(%s,%s)"
+    args = (accId,cardId)
+    dbIns(query,args)
+    '''
 
 def removeCardWallet():
     pass
