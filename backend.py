@@ -115,12 +115,12 @@ def getProfileCards(profId):
     query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
     #INCOMPLETE
-    jsonStr = '{"Cards": ['
+    jsonStr = '{"profile' + profId + '_cards": ['
     for i in range(len(cards)):
         if cards[i] == cards[-1]:
-            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
+            jsonStr += '{"card_id":' + str(cards[i][0]) + ', ' + cards[i][1][1:]
         else:
-            jsonStr += '"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
+            jsonStr += '{"card_id":' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
     jsonStr += ']}'
     print(jsonStr)
 
@@ -205,7 +205,7 @@ elif actionType == 'get_profile_cards': # PROFILE CARDS
 #REQUIRES TESTING
 elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
-    cardName = form.getvalue('card_name')\
+    cardName = form.getvalue('card_name')
     insertProfile(profId,cardName)
 #REQURES TESTING
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
