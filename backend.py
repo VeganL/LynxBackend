@@ -124,7 +124,6 @@ def getProfileCards(profId):
     jsonStr += ']}'
     print(jsonStr)
 
-# DONT KNOW HOW TO TEST
 # Inserts new card_id into cards table with the given profile_id
 def insertProfileCard(profId,cardName):
     name = '{"cardName": "' + cardName + '"}'
@@ -169,16 +168,16 @@ def getWallet(accId):
 def getCardQr(jsonStr):
     pass
 
+# inserts a row into account_cards
 def addCardWalletConf(accId,cardId):
-    '''
-        Code for adding a card to the wallet:
     query = "INSERT INTO account_cards(acc_id, card_id) VALUES(%s,%s)"
     args = (accId,cardId)
     dbIns(query,args)
-    '''
 
 def removeCardWallet():
     pass
+
+
 
 #Takes form data sent from app and runs related function(s)
 form = cgi.FieldStorage()
@@ -206,12 +205,12 @@ elif actionType == 'insert_profile':
 elif actionType == 'get_profile_cards': # PROFILE CARDS
     profId = form.getvalue('profile_id')
     getProfileCards(profId)
-#REQUIRES TESTING
+#DONE
 elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     cardName = form.getvalue('card_name')
     insertProfileCard(profId,cardName)
-#REQURES TESTING
+#DONE
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
     getProfileAttributes(profId)
