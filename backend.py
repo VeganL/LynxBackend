@@ -151,7 +151,6 @@ def insertProfileAttributes(profId,jsonStr):
         args = (profId,'{"' + key + '":"' + value + '"}')
         dbIns(query,args)
 
-# DONT KNOW HOW TO TEST
 # prints list of card_id that have been shared with given account_id
 def getWallet(accId):
     query = "SELECT card_id, name FROM account_cards WHERE account_id = " + str(accId)
@@ -227,7 +226,10 @@ elif actionType == 'get_card_qr':
     #automates card download process
     pass
 elif actionType == 'add_card_wallet_conf':
-    #confirmation that card has been added to wallet
+    accId = form.getvalue('account_id')
+    cardId = form.getvalue('card_id')
+    addCardWalletConf(accId,cardId)
+#TESING
     pass
 elif actionType == 'remove_card_wallet':
     #removes a card from account's wallet
