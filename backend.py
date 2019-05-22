@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,re,json
+import cgi,cgitb,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
