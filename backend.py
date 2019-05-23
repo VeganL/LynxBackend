@@ -180,7 +180,7 @@ def removeCardWallet(accId, cardId):
 
 def getCardAttributes(cardId):
     query = "SELECT attribute_id FROM attributes_cards WHERE card_id = " + str(cardId)
-    attributes = dbQ(query,args)
+    attributes = dbQ(query)
     jsonStr = '{"attributes": ['
     for i in range(len(attributes)):
         jsonString += '{"attribute_id": ' + str(attributes[1][0]) + ', ' + attributes[i][1][1:]
