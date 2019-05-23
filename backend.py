@@ -172,8 +172,10 @@ def addCardWalletConf(accId,cardId):
     dbIns(query,args)
 
 def removeCardWallet(accId, cardId):
+    '''
     query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " and card_id = " + str(cardId)
     dbQ(query)
+    '''
 #TESTING
 
 
@@ -232,9 +234,12 @@ elif actionType == 'add_card_wallet_conf':
     addCardWalletConf(accId,cardId)
 #DONE
 elif actionType == 'remove_card_wallet':
+    '''
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     removeCardWallet(accId,cardId)
+    #Figure how to delete rows using mySQL.connector
+    '''
     #removes a card from account's wallet
 #TESTING
 else: #The following is to test if any changes to code breaks code in-browser; default response
