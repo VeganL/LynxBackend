@@ -209,7 +209,7 @@ elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     cardName = form.getvalue('card_name')
     insertProfileCard(profId,cardName)
-#WIP - extend functionality
+#WIP - extend functionality (don't just add cardname)
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
     getProfileAttributes(profId)
@@ -218,12 +218,6 @@ elif actionType == 'insert_profile_attributes':
     profId = form.getvalue('profile_id')
     jsonStr = form.getvalue('attr_2_ins')
     insertProfileAttributes(profId,jsonStr)
-elif actionType == 'get_card_attr':
-    pass
-    #WIP
-elif actionType == 'ins_card_attr':
-    pass
-    #WIP
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
     accId = form.getvalue('account_id')
     getWallet(accId)
