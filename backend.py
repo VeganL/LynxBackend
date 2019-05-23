@@ -172,7 +172,7 @@ def addCardWalletConf(accId,cardId):
     dbIns(query,args)
 
 def removeCardWallet(accId, cardId):
-    query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " card_id = " + str(cardId)
+    query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " and card_id = " + str(cardId)
     dbQ(query)
 #TESTING
 
