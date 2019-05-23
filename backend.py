@@ -218,18 +218,25 @@ elif actionType == 'insert_profile_attributes':
     profId = form.getvalue('profile_id')
     jsonStr = form.getvalue('attr_2_ins')
     insertProfileAttributes(profId,jsonStr)
+elif actionType == 'get_card_attr':
+    pass
+    #WIP
+elif actionType == 'ins_card_attr':
+    pass
+    #WIP
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
     accId = form.getvalue('account_id')
     getWallet(accId)
-#DONE
+#WIP - extend functionality
 elif actionType == 'get_card_qr':
     #automates card download process
     pass
+#WIP
 elif actionType == 'add_card_wallet_conf':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
-#WIP
+#DONE
 elif actionType == 'remove_card_wallet':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
