@@ -124,11 +124,17 @@ def getProfileCards(profId):
     print(jsonStr)
 
 # Inserts new card_id into cards table with the given profile_id
-def insertProfileCard(profId,cardName):
-    name = '{"cardName": "' + cardName + '"}'
+def insertProfileCard(profId,jsonStr):
+    '''name = '{"cardName": "' + cardName + '"}'
     query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
     args = (profId,name)
-    dbW(query,args)
+    dbW(query,args)'''
+    pyDict = json.loads(jsonStr)
+    for key, value in pyDict.items():
+        if key == 'cardName':
+            pass
+        else:
+            pass
 
 def getProfileAttributes(profId):
     query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
@@ -190,10 +196,10 @@ def getCardAttributes(cardId):
     print(jsonStr)
 #TESTING
 
-def insertCardAttribute(cardId, attId):
+'''def insertCardAttribute(cardId, attId):
     query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
     args = (cardId,attId)
-    dbW(query,args)
+    dbW(query,args)'''
 #TESTING
 
 
@@ -227,8 +233,8 @@ elif actionType == 'get_profile_cards': # PROFILE CARDS
 #DONE
 elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
-    cardName = form.getvalue('card_name')
-    insertProfileCard(profId,cardName)
+    cardJson = form.getvalue('card_2_ins')
+    insertProfileCard(profId,cardJson)
 #WIP - extend functionality (don't just add cardname)
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
@@ -236,8 +242,8 @@ elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
 #DONE
 elif actionType == 'insert_profile_attributes':
     profId = form.getvalue('profile_id')
-    jsonStr = form.getvalue('attr_2_ins')
-    insertProfileAttributes(profId,jsonStr)
+    attrJson = form.getvalue('attr_2_ins')
+    insertProfileAttributes(profId,attrJson)
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
     accId = form.getvalue('account_id')
     getWallet(accId)
