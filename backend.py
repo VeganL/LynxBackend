@@ -176,6 +176,24 @@ def removeCardWallet(accId, cardId):
     query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " and card_id = " + str(cardId)
     dbQ(query)
     '''
+#LEARN HOW TO DELETE USING MYSQL.CONNECTOR
+
+def getCardAttributes(cardId):
+    query = "SELECT attribute_id FROM attributes_cards WHERE card_id = " + str(cardId)
+    attributes = dbQ(query,args)
+    jsonStr = '{"attributes": ['
+    for i in range(len(attributes)):
+        jsonString += '{"attribute_id": ' + str(attributes[1][0]) + ', ' + attributes[i][1][1:]
+        if attributes[i] != attributes[-1]:
+            jsonStr += ', '
+    jsonStr += ']}'
+    print(jsonStr)
+#TESTING
+
+def insertCardAttribute(cardId, attId):
+    query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
+    args = (cardId,attId)
+    dbIns(query,args)
 #TESTING
 
 
