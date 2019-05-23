@@ -204,10 +204,10 @@ def getCardAttributes(cardId):
     print(jsonStr)
 #TESTING
 
-'''def insertCardAttribute(cardId, attId):
+def insertCardAttributes(cardId, attId):
     query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
     args = (cardId,attId)
-    dbW(query,args)'''
+    dbW(query,args)
 #TESTING
 
 
@@ -274,6 +274,14 @@ elif actionType == 'remove_card_wallet':
     '''
     #removes a card from account's wallet
 #TESTING
+elif actionType == 'get_card_attributes':
+    cardId = form.getva1ue('card_id')
+    getCardAttributes(cardId)
+#TESTING
+elif actionType == 'insert_card_attributes' :
+    cardId = form.getvalue('card_id')
+    attId = form.getvalue('attribute_id')
+    insertCardAttributes(cardId,attId)
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
