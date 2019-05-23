@@ -109,12 +109,10 @@ def insertProfile(accId,profileName):
     args = (accId,title)
     dbIns(query,args)
 
-# I DONT KNOW HOW TO TEST
 # prints json with card_id s from the profile with the given profile_id
 def getProfileCards(profId):
     query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
-    #INCOMPLETE
     jsonStr = '{"profile' + profId + '_cards": ['
     for i in range(len(cards)):
         if cards[i] == cards[-1]:
@@ -173,8 +171,10 @@ def addCardWalletConf(accId,cardId):
     args = (accId,cardId)
     dbIns(query,args)
 
-def removeCardWallet():
-    pass
+def removeCardWallet(accId, cardId):
+    query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " card_id = " + str(cardId)
+    dbQ(query)
+#TESTING
 
 
 
@@ -221,7 +221,7 @@ elif actionType == 'insert_profile_attributes':
 elif actionType == 'get_wallet': ### WALLET FUNCTIONS
     accId = form.getvalue('account_id')
     getWallet(accId)
-#REQUIRES TESTING
+#DONE
 elif actionType == 'get_card_qr':
     #automates card download process
     pass
@@ -229,11 +229,13 @@ elif actionType == 'add_card_wallet_conf':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
-#TESING
-    pass
+#DONE
 elif actionType == 'remove_card_wallet':
+    accId = form.getvalue('account_id')
+    cardId = form.getvalue('card_id')
+    removeCardWallet(accId,cardId)
     #removes a card from account's wallet
-    pass
+#TESTING
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
