@@ -64,6 +64,7 @@ def dbQ(query,args=None):
         connect.close()
         return result
 
+
 #Register function, adds valid information to database
 def register(username,email,password):
     query = "SELECT * FROM accounts WHERE username = '" + str(username) + "'"
@@ -112,6 +113,13 @@ def getProfileCards(profId): #WIP
 
 def insertProfileCard(profId,cardJson): #WIP
     pass
+
+def getWallet(accId):
+    pass
+
+def addCardWalletConf(accId,cardId):
+    pass
+
 
 ''' Request handling '''
 form = cgi.FieldStorage()
