@@ -20,7 +20,7 @@ def iterRow(cursor,size):
         for row in rows:
             yield row
 
-def dbW(query,args=None):
+def dbW(query,args=None,silentRun=False):
     global insCounter
     try:
         dbconfig = readDbConfig()
@@ -33,7 +33,7 @@ def dbW(query,args=None):
             cursor.execute(query,args)
         
         connect.commit()
-        if insCounter == 0:
+        if insCounter == 0 and silentRun == False:
             print('{"err":false}')
             insCounter += 1
     except:
@@ -138,10 +138,11 @@ def insertProfileCard(profId,jsonStr):
             for subKey, subValue in value.items():
                 argL.append(subValue)
             args = (argL[0],str('{"card_name":"' + argL[1] + '"}'))
-            dbW(query,args)
+            dbW(query,args,True)
         else:
-            #format: {..., "foo": ..., ...}
-            pass
+            #format: {..., "attr_name":"attr_info", ...}
+            query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
+            
 
 def getProfileAttributes(profId):
     query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
