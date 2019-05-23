@@ -131,9 +131,16 @@ def insertProfileCard(profId,jsonStr):
     dbW(query,args)'''
     pyDict = json.loads(jsonStr)
     for key, value in pyDict.items():
-        if key == 'cardName':
-            pass
+        if key == 'card':
+            #format of this part is {"card": {"profile_id:" #, "name": "str"},...}
+            query = "INSERT INTO cards(profile_id,name) VALUES (%s,%s)"
+            argL = []
+            for subKey, subValue in value.items():
+                argL.append(subValue)
+            args = (argL[0],str('{"card_name":"' + argL[1] + '"}'))
+            dbW(query,args)
         else:
+            #format: {..., "foo": ..., ...}
             pass
 
 def getProfileAttributes(profId):
