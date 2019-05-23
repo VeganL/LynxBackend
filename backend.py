@@ -91,7 +91,7 @@ def login(username,password):
     else:
         print('{"err":"Invalid login information"}')
 
-def getProfiles(accId):
+def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + accId
     profiles = dbQ(query)
     jsonStr = '{"Profiles": ['
@@ -103,185 +103,64 @@ def getProfiles(accId):
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfile(accId,profileName):
-    title = '{"profileName": "' + profileName + '"}'
-    query = "INSERT INTO profiles(account_id,title) " \
-        "VALUES(%s,%s)"
-    args = (accId,title)
-    dbW(query,args)
-
-# prints json with card_id s from the profile with the given profile_id
-def getProfileCards(profId):
-    query = "SELECT card_id, name FROM cards WHERE profile_id = " + str(profId)
-    cards = dbQ(query)
-    jsonStr = '{"profile' + profId + '_cards": ['
-    for i in range(len(cards)):
-        if cards[i] == cards[-1]:
-            jsonStr += '{"card_id":' + str(cards[i][0]) + ', ' + cards[i][1][1:]
-        else:
-            jsonStr += '{"card_id":' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
-    jsonStr += ']}'
-    print(jsonStr)
-
-# Inserts new card_id into cards table with the given profile_id
-def insertProfileCard(profId,jsonStr):
-    '''name = '{"cardName": "' + cardName + '"}'
-    query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
-    args = (profId,name)
-    dbW(query,args)'''
-    pyDict = json.loads(jsonStr)
-    for key, value in pyDict.items():
-        if key == 'card':
-            #format of this part is {"card": {"profile_id:" #, "name": "str"},...}
-            query = "INSERT INTO cards(profile_id,name) VALUES (%s,%s)"
-            argL = []
-            for subKey, subValue in value.items():
-                argL.append(subValue)
-            args = (argL[0],str('{"card_name":"' + argL[1] + '"}'))
-            dbW(query,args,True)
-        else:
-            #format: {..., "attr_name":"attr_info", ...}
-            query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
-            
-
-def getProfileAttributes(profId):
-    query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
-    result = dbQ(query)
-    jsonStr = '{"profile' + profId + '_attributes": ['
-    for i in range(len(result)):
-        if result[i] == result[-1]:
-            jsonStr += '{"attribute_id":' + str(result[i][0]) + ', ' + result[i][1][1:]
-        else:
-            jsonStr += '{"attribute_id":' + str(result[i][0]) + ', ' + result[i][1][1:] + ', '
-    jsonStr += ']}'
-    print(jsonStr)
-
-def insertProfileAttributes(profId,jsonStr):
-    pyDict = json.loads(jsonStr)
-    for key, value in pyDict.items():
-        query = "INSERT INTO attributes(profile_id,attribute) " \
-            "VALUES(%s,%s)"
-        args = (profId,'{"' + key + '":"' + value + '"}')
-        dbW(query,args)
-
-# prints list of card_id that have been shared with given account_id
-def getWallet(accId):
-    query = "SELECT card_id, name FROM account_cards WHERE account_id = " + str(accId)
-    cards = dbQ(query)
-    jsonStr = '{"wallet": ['
-    for i in range(len(cards)):
-        if cards[i] == cards[-1]:
-            jsonStr += '{"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:]
-        else:
-            jsonStr += '{"card_id": ' + str(cards[i][0]) + ', ' + cards[i][1][1:] + ', '
-    jsonStr += ']}'
-    print(jsonStr)
-
-def getCardQr(jsonStr):
+def insertProfile(accId,profileJson): #WIP
+    # profileJson: {"profile_name":"name","attributes":["{"name":"dudename"}",...]}
     pass
 
-# inserts a row into account_cards
-def addCardWalletConf(accId,cardId):
-    query = "INSERT INTO account_cards(account_id, card_id) VALUES(%s,%s)"
-    args = (accId,cardId)
-    dbW(query,args)
+def getProfileCards(profId): #WIP
+    pass
 
-def removeCardWallet(accId, cardId):
-    '''
-    query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " and card_id = " + str(cardId)
-    dbQ(query)
-    '''
+def insertProfileCard(profId,cardJson): #WIP
+    pass
 
-def getCardAttributes(cardId):
-    query = "SELECT attribute_id FROM attributes_cards WHERE card_id = " + str(cardId)
-    attributes = dbQ(query)
-    jsonStr = '{"attributes": ['
-    for i in range(len(attributes)):
-        jsonString += '{"attribute_id": ' + str(attributes[1][0]) + ', ' + attributes[i][1][1:]
-        if attributes[i] != attributes[-1]:
-            jsonStr += ', '
-    jsonStr += ']}'
-    print(jsonStr)
-#TESTING
-
-def insertCardAttributes(cardId, attId):
-    query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
-    args = (cardId,attId)
-    dbW(query,args)
-#TESTING
-
-
-
-#Takes form data sent from app and runs related function(s)
+''' Request handling '''
 form = cgi.FieldStorage()
 actionType = form.getvalue('type')
-if actionType == 'register': ### ACCOUNT INITIATION FUNCTIONS
+if actionType == 'register':
     username = form.getvalue('username')
     email = form.getvalue('email')
     password = form.getvalue('password')
     register(username,email,password)
-#DONE
 elif actionType == 'login':
     username = form.getvalue('username')
     password = form.getvalue('password')
     login(username,password)
-#DONE
-elif actionType == 'get_profiles': ### PROFILE FUNCTIONS
+##############################################################
+elif actionType == 'get_profiles': #WIP
     accId = form.getvalue('account_id')
     getProfiles(accId)
-#DONE
-elif actionType == 'insert_profile':
+elif actionType == 'insert_profile': #WIP
     accId = form.getvalue('account_id')
-    profileName = form.getvalue('profile_name')
-    insertProfile(accId,profileName)
-#DONE
-elif actionType == 'get_profile_cards': # PROFILE CARDS
+    profJson = form.getvalue('profile_json')
+    insertProfile(accId,profJson)
+elif actionType == 'edit_profile': #WIP
+    pass
+### PROFILE CARDS ###
+elif actionType == 'get_profile_cards': #WIP
     profId = form.getvalue('profile_id')
     getProfileCards(profId)
-#DONE
-elif actionType == 'insert_profile_card':
+elif actionType == 'insert_profile_card': #WIP
     profId = form.getvalue('profile_id')
-    cardJson = form.getvalue('card_2_ins')
+    cardJson = form.getvalue('card_json')
     insertProfileCard(profId,cardJson)
-#WIP - extend functionality (don't just add cardname)
-elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
-    profId = form.getvalue('profile_id')
-    getProfileAttributes(profId)
-#DONE
-elif actionType == 'insert_profile_attributes':
-    profId = form.getvalue('profile_id')
-    attrJson = form.getvalue('attr_2_ins')
-    insertProfileAttributes(profId,attrJson)
-elif actionType == 'get_wallet': ### WALLET FUNCTIONS
+elif actionType == 'edit_card': #WIP
+    pass
+elif actionType == 'remove_card_profile': #WIP
+    pass
+##############################################################
+elif actionType == 'get_wallet': #WIP
     accId = form.getvalue('account_id')
     getWallet(accId)
-#WIP - extend functionality
-elif actionType == 'get_card_qr':
+elif actionType == 'get_card_qr': #WIP
     #automates card download process
     pass
-#WIP
-elif actionType == 'add_card_wallet_conf':
+elif actionType == 'add_card_wallet_conf': #WIP
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
-#DONE
-elif actionType == 'remove_card_wallet':
-    '''
-    accId = form.getvalue('account_id')
-    cardId = form.getvalue('card_id')
-    removeCardWallet(accId,cardId)
-    #Figure how to delete rows using mySQL.connector
-    '''
-    #removes a card from account's wallet
-#TESTING
-elif actionType == 'get_card_attributes':
-    cardId = form.getva1ue('card_id')
-    getCardAttributes(cardId)
-#TESTING
-elif actionType == 'insert_card_attributes' :
-    cardId = form.getvalue('card_id')
-    attId = form.getvalue('attribute_id')
-    insertCardAttributes(cardId,attId)
+elif actionType == 'remove_card_wallet': #WIP
+    pass
+##############################################################
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
     data = json.dumps(foo)
