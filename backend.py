@@ -6,6 +6,7 @@ from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
 
 insCounter = 0
+delCounter = 0
 
 #Defines resulting page/text as json format
 print('Content-type: application/json\n')
@@ -19,7 +20,7 @@ def iterRow(cursor,size):
         for row in rows:
             yield row
 
-def dbIns(query,args=None):
+def dbW(query,args=None):
     global insCounter
     try:
         dbconfig = readDbConfig()
@@ -77,7 +78,7 @@ def register(username,email,password):
         query = "INSERT INTO accounts(username,email,password) " \
             "VALUES(%s,%s,%s)"
         args = (username,email,password)
-        dbIns(query,args)
+        dbW(query,args)
 
 #Login function, returns account_id connected to valid username and password
 def login(username,password):
@@ -107,7 +108,7 @@ def insertProfile(accId,profileName):
     query = "INSERT INTO profiles(account_id,title) " \
         "VALUES(%s,%s)"
     args = (accId,title)
-    dbIns(query,args)
+    dbW(query,args)
 
 # prints json with card_id s from the profile with the given profile_id
 def getProfileCards(profId):
@@ -127,7 +128,7 @@ def insertProfileCard(profId,cardName):
     name = '{"cardName": "' + cardName + '"}'
     query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
     args = (profId,name)
-    dbIns(query,args)
+    dbW(query,args)
 
 def getProfileAttributes(profId):
     query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profId)
@@ -147,7 +148,7 @@ def insertProfileAttributes(profId,jsonStr):
         query = "INSERT INTO attributes(profile_id,attribute) " \
             "VALUES(%s,%s)"
         args = (profId,'{"' + key + '":"' + value + '"}')
-        dbIns(query,args)
+        dbW(query,args)
 
 # prints list of card_id that have been shared with given account_id
 def getWallet(accId):
@@ -169,14 +170,13 @@ def getCardQr(jsonStr):
 def addCardWalletConf(accId,cardId):
     query = "INSERT INTO account_cards(account_id, card_id) VALUES(%s,%s)"
     args = (accId,cardId)
-    dbIns(query,args)
+    dbW(query,args)
 
 def removeCardWallet(accId, cardId):
     '''
     query = "DELETE FROM account_cards WHERE account_id = " + str(accId) + " and card_id = " + str(cardId)
     dbQ(query)
     '''
-#LEARN HOW TO DELETE USING MYSQL.CONNECTOR
 
 def getCardAttributes(cardId):
     query = "SELECT attribute_id FROM attributes_cards WHERE card_id = " + str(cardId)
@@ -193,7 +193,7 @@ def getCardAttributes(cardId):
 def insertCardAttribute(cardId, attId):
     query = "INSERT INTO attributes_cards(card_id, attribute_id) VALUES(%s, %s)"
     args = (cardId,attId)
-    dbIns(query,args)
+    dbW(query,args)
 #TESTING
 
 
