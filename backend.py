@@ -209,7 +209,7 @@ elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     cardName = form.getvalue('card_name')
     insertProfileCard(profId,cardName)
-#DONE
+#WIP - extend functionality
 elif actionType == 'get_profile_attributes': # PROFILE ATTRIBUTES
     profId = form.getvalue('profile_id')
     getProfileAttributes(profId)
@@ -229,7 +229,7 @@ elif actionType == 'add_card_wallet_conf':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
-#DONE
+#WIP
 elif actionType == 'remove_card_wallet':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
