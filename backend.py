@@ -98,7 +98,7 @@ def login(username,password):
     else:
         print('{"err":"Invalid login information"}')
 
-def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
+def getProfiles(accId):
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
 
@@ -178,7 +178,7 @@ elif actionType == 'login':
     password = form.getvalue('password')
     login(username,password)
 ##############################################################
-elif actionType == 'get_profiles': #WIP
+elif actionType == 'get_profiles':
     accId = form.getvalue('account_id')
     getProfiles(accId)
 elif actionType == 'insert_profile':
