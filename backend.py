@@ -64,6 +64,12 @@ def dbQ(query,args=None):
         connect.close()
         return result
 
+#Return JsonList
+def getAttributes(attIdList):
+    pass
+
+def insertAttributes(profId,attJsonList):
+    pass
 
 #Register function, adds valid information to database
 def register(username,email,password):
@@ -109,7 +115,27 @@ def insertProfile(accId,profileJson): #WIP
     pass
 
 def getProfileCards(profId): #WIP
-    pass
+    query = "SELECT card_id,name FROM cards WHERE profile_id = %s VALUES(profile_id)"
+    args = (profId)
+    cards = dbQ(query,args)
+    jsonStr = '{"Cards": ['
+    for card in cards:
+        jsonStr += '{"card_id": ' + str(card[0]) + ', ' + card[1][:-1] + ', {"Attributes": ['
+        queryC = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s VALUES(card_id)"
+        argsC = (card)
+        attributes = dbQ(queryC,argsC)
+        for att in attributes:
+            queryA = "SELECT attribute FROM attributes WHERE attribute_id = %s VALUES(attribute_id)"
+            argsA = (att)
+            value = dbQ(queryA,argsA)
+            jsonStr += '{"attribute_id": ' + str(att) + ', ' + str(value)
+            if att != attributes[-1]:
+                jsonStr += ', '
+        jsonStr += ']}'
+        if card != cards[-1]:
+            jsonStr += ', '
+    jsonStr += ']}'
+    print(jsonStr)
 
 def insertProfileCard(profId,cardJson): #WIP
     pass
