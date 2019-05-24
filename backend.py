@@ -97,19 +97,19 @@ def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     profiles = dbQ(query)
     attributes = []
     for i in range(len(profiles)):
-        attr = []
         query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
         attributes.append(dbQ(query))
 
     jsonStr = '{['
     for i in range(len(profiles)):
         jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', "attributes":['
-        for attribute 
-    '''for i in range(len(profiles)):
-        if profiles[i] == profiles[-1]:
-            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:]
-        else:
-            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ''''
+        for r in range(len(attributes[i])):
+            jsonStr += '{"attribute_id":' + attributes[i][r][0] + ', ' + attributes[i][r][1:]
+            if attributes[i] != attributes[-1]:
+                jsonStr += ', '
+        jsonStr += ']}'
+        if profiles[i] != profiles[-1]:
+            jsonStr += ', '
     jsonStr += ']}'
     print(jsonStr)
 
