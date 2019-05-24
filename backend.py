@@ -106,7 +106,23 @@ def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
 
 def insertProfile(accId,profileJson): #WIP
     # profileJson: {"profile_name":"name","attributes":["{"name":"dudename"}",...]}
-    pass
+    profDict = json.loads(profileJson)
+    attrL = profDict['attributes']
+
+    query = "INSERT INTO profiles(account_id,title) VALUES (%s,%s)"
+    args = (accId,'{"profile_name":"' + profDict['profile_name'] + '"}')
+    dbW(query,args,True)
+
+    query = "SELECT profile_id FROM profiles WHERE account_id = " + str(accId)
+    profId = dbQ(query)
+
+    for i in range(len(attrL)):
+        query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
+        args = (profId,attrL[i])
+        if attrL[i] == attrL[-1]:
+            dbW(query,args)
+        else:
+            dbW(query,args,True)
 
 def getProfileCards(profId): #WIP
     pass
