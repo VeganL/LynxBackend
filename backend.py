@@ -88,19 +88,28 @@ def login(username,password):
     uid = dbQ(query,args)
     if len(uid) == 1:
         uidInt = json.dumps(uid[0])
-        print('{ "account_id":', uidInt[1], '}')
+        getProfiles(uidInt[1])
     else:
         print('{"err":"Invalid login information"}')
 
 def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
-    jsonStr = '{"Profiles": ['
+    attributes = []
     for i in range(len(profiles)):
+        attr = []
+        query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
+        attributes.append(dbQ(query))
+
+    jsonStr = '{['
+    for i in range(len(profiles)):
+        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', "attributes":['
+        for attribute 
+    '''for i in range(len(profiles)):
         if profiles[i] == profiles[-1]:
             jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:]
         else:
-            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', '
+            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', ''''
     jsonStr += ']}'
     print(jsonStr)
 
