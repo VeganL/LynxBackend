@@ -95,17 +95,15 @@ def login(username,password):
 def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
-    attributes = []
-    for i in range(len(profiles)):
-        query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
-        attributes.append(dbQ(query))
 
     jsonStr = '{['
     for i in range(len(profiles)):
+        query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
+        profAttr = dbQ(query)
         jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', "attributes":['
-        for r in range(len(attributes[i])):
-            jsonStr += '{"attribute_id":' + attributes[i][r][0] + ', ' + attributes[i][r][1:]
-            if attributes[i] != attributes[-1]:
+        for r in range(len(profAttr)):
+            jsonStr += '{"attribute_id":' + str(profAttr[r][0]) + ', ' + profAttr[r][1][1:]
+            if profAttr[r] != profAttr[-1]:
                 jsonStr += ', '
         jsonStr += ']}'
         if profiles[i] != profiles[-1]:
@@ -121,7 +119,7 @@ def insertProfile(accId,profileJson,attributesJson):
     dbW(query,args,True)
 
     query = "SELECT profile_id FROM profiles WHERE account_id = " + str(accId)
-    profId = dbQ(query)[0][0]
+    profId = dbQ(query)[-1][-1]
 
     for key, value in attrDict.items():
         query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
