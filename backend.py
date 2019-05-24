@@ -104,25 +104,20 @@ def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfile(accId,profileJson): #WIP
-    # profileJson: {"profile_name":"name","attributes":[[name,dudename],...]}
-    profDict = json.loads(profileJson)
-    attrL = profDict['attributes']
+def insertProfile(accId,profileJson,attributesJson): #WIP
+    attrDict = json.loads(attributesJson)
 
     query = "INSERT INTO profiles(account_id,title) VALUES (%s,%s)"
-    args = (accId,'{"profile_name":"' + profDict['profile_name'] + '"}')
+    args = (accId,profileJson)
     dbW(query,args,True)
 
     query = "SELECT profile_id FROM profiles WHERE account_id = " + str(accId)
     profId = dbQ(query)
 
-    for i in range(len(attrL)):
+    for key, value in attrDict.items():
         query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
-        args = (profId,'{"' + attrL[i][0] + '":"' + attrL[i][1] + '"}')
-        if attrL[i] == attrL[-1]:
-            dbW(query,args)
-        else:
-            dbW(query,args,True)
+        args = (profId,'{"' + key + '":"' + value + '"}')
+        dbW(query,args)
 
 def getProfileCards(profId): #WIP
     pass
@@ -155,8 +150,9 @@ elif actionType == 'get_profiles': #WIP
     getProfiles(accId)
 elif actionType == 'insert_profile': #WIP
     accId = form.getvalue('account_id')
-    profJson = form.getvalue('profile_json')
-    insertProfile(accId,profJson)
+    profNameJson = form.getvalue('profile_name_json')
+    attrJson = form.getvalue('attributes_json')
+    insertProfile(accId,profNameJson,attrJson)
 elif actionType == 'edit_profile': #WIP
     pass
 ### PROFILE CARDS ###
