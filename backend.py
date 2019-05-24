@@ -93,7 +93,7 @@ def login(username,password):
         print('{"err":"Invalid login information"}')
 
 def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
-    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + accId
+    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
     jsonStr = '{"Profiles": ['
     for i in range(len(profiles)):
@@ -104,7 +104,7 @@ def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfile(accId,profileJson,attributesJson): #WIP
+def insertProfile(accId,profileJson,attributesJson):
     attrDict = json.loads(attributesJson)
 
     query = "INSERT INTO profiles(account_id,title) VALUES (%s,%s)"
@@ -125,10 +125,10 @@ def getProfileCards(profId): #WIP
 def insertProfileCard(profId,cardJson): #WIP
     pass
 
-def getWallet(accId):
+def getWallet(accId): #WIP
     pass
 
-def addCardWalletConf(accId,cardId):
+def addCardWalletConf(accId,cardId): #WIP
     pass
 
 
@@ -148,7 +148,7 @@ elif actionType == 'login':
 elif actionType == 'get_profiles': #WIP
     accId = form.getvalue('account_id')
     getProfiles(accId)
-elif actionType == 'insert_profile': #WIP
+elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
     profNameJson = form.getvalue('profile_name_json')
     attrJson = form.getvalue('attributes_json')
