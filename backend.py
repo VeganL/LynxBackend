@@ -105,7 +105,7 @@ def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
     print(jsonStr)
 
 def insertProfile(accId,profileJson): #WIP
-    # profileJson: {"profile_name":"name","attributes":["{"name":"dudename"}",...]}
+    # profileJson: {"profile_name":"name","attributes":[[name,dudename],...]}
     profDict = json.loads(profileJson)
     attrL = profDict['attributes']
 
@@ -118,7 +118,7 @@ def insertProfile(accId,profileJson): #WIP
 
     for i in range(len(attrL)):
         query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
-        args = (profId,attrL[i])
+        args = (profId,'{"' + attrL[i][0] + '":"' + attrL[i][1] + '"}')
         if attrL[i] == attrL[-1]:
             dbW(query,args)
         else:
