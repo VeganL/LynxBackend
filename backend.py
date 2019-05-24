@@ -112,11 +112,11 @@ def insertProfile(accId,profileJson,attributesJson): #WIP
     dbW(query,args,True)
 
     query = "SELECT profile_id FROM profiles WHERE account_id = " + str(accId)
-    profId = dbQ(query)
+    profId = dbQ(query)[0][0]
 
     for key, value in attrDict.items():
         query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
-        args = (profId,'{"' + key + '":"' + value + '"}')
+        args = (profId,'{"' + key + '":"' + str(value) + '"}')
         dbW(query,args)
 
 def getProfileCards(profId): #WIP
