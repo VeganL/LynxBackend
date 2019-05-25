@@ -77,7 +77,7 @@ def getCard(card_id):
     queryC = "Select name FROM cards WHERE card_id = %s"
     argsC = (card_id)
     card_name = dbQ(queryC,argsC)
-    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s
+    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s"
     argsA = (card_id)
     att_ids = dbQ(queryA,argsA)
 
@@ -149,7 +149,6 @@ def insertProfileCard(profId,cardJson,attIdJson): #WIP
     query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
     args = (profId,cardJson)
     dbW(query,args)
-    '''
     queryC = "SELECT card_id WHERE profile_id = %s AND name = %s"
     argsC = (profId,cardJson)
     cardId = dbQ(queryC,argsC)
@@ -157,7 +156,6 @@ def insertProfileCard(profId,cardJson,attIdJson): #WIP
     for attId in attlist:
         argsA = (cardId,attId)
         dbW(queryA,argsA)
-        '''
 
 
 
