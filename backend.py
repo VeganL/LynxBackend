@@ -145,7 +145,7 @@ def getProfileCards(profId): #NEEDS TESTING
     print(jsonStr)
 
 def insertProfileCard(profId,cardJson,attIdJson): #WIP
-    attlist = json.loads(attIdJson)
+    attlist = json.loads(attIdJson)['attributes']
     query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
     args = (profId,cardJson)
     dbW(query,args)
