@@ -195,7 +195,8 @@ elif actionType == 'get_profile_cards': #WIP
 elif actionType == 'insert_profile_card': #WIP
     profId = form.getvalue('profile_id')
     cardJson = form.getvalue('card_json')
-    insertProfileCard(profId,cardJson)
+    attidjson = form.getvalue('att_id_json')
+    insertProfileCard(profId,cardJson,attidjson)
 elif actionType == 'edit_card': #WIP
     pass
 elif actionType == 'remove_card_profile': #WIP
