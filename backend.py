@@ -66,7 +66,7 @@ def dbQ(query,args=None):
 
 #Returns jsonString representation of an attribute
 def getAttribute(att_id):
-    query = "SELECT attribute FROM attributes where attribute_id = %s VALUES(attribute_id)"
+    query = "SELECT attribute FROM attributes where attribute_id = %s"
     args = (att_id)
     att = dbQ(query,args)
     jsonStr = f'{{"attribute_id": {str(att_id)}, {att}}}'
@@ -74,10 +74,10 @@ def getAttribute(att_id):
 
 #Returns jsonString representation of a card
 def getCard(card_id):
-    queryC = "Select name FROM cards WHERE card_id = %s VALUES(card_id)"
+    queryC = "Select name FROM cards WHERE card_id = %s"
     argsC = (card_id)
     card_name = dbQ(queryC,argsC)
-    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s VALUES(card_id)"
+    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s
     argsA = (card_id)
     att_ids = dbQ(queryA,argsA)
 
@@ -133,7 +133,7 @@ def insertProfile(accId,profileJson): #WIP
     pass
 
 def getProfileCards(profId): #NEEDS TESTING
-    query = "SELECT card_id FROM cards WHERE profile_id = %s VALUES(profile_id)"
+    query = "SELECT card_id FROM cards WHERE profile_id = %s"
     args = (profId)
     cards = dbQ(query,args)
     jsonStr = '{"Cards": ['
