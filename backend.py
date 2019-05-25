@@ -1,12 +1,11 @@
 #!/usr/bin/python
 ''' Imports of necessary modules '''
-import cgi,cgitb,re,json
+import cgi,cgitb,json
 cgitb.enable()
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
 
 insCounter = 0
-delCounter = 0
 
 #Defines resulting page/text as json format
 print('Content-type: application/json\n')
