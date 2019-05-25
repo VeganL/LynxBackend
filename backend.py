@@ -149,13 +149,15 @@ def insertProfileCard(profId,cardJson,attIdJson): #WIP
     query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
     args = (profId,cardJson)
     dbW(query,args)
-    queryC = "SELECT card_id where profile_id = %s and name = %s"
+    '''
+    queryC = "SELECT card_id WHERE profile_id = %s AND name = %s"
     argsC = (profId,cardJson)
     cardId = dbQ(queryC,argsC)
     queryA = "INSERT INTO attributes_cards(card_id,attribute_id) VALUES(%s,%s)"
     for attId in attlist:
         argsA = (cardId,attId)
         dbW(queryA,argsA)
+        '''
 
 
 
