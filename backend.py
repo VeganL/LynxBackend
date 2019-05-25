@@ -154,7 +154,8 @@ def insertProfileCard(profId,cardJson,attIdJson): #WIP
     argsC = (profId,cardJson)
     cardId = dbQ(queryC,argsC)
     queryA = "INSERT INTO attributes_cards(card_id,attribute_id) VALUES(%s,%s)"
-    for attId in attlist['attributes']:
+    for attId in attlist:
+        print(attId)
         argsA = (cardId,attId)
         dbW(queryA,argsA)
 
