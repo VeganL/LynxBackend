@@ -133,23 +133,12 @@ def insertProfile(accId,profileJson): #WIP
     pass
 
 def getProfileCards(profId): #NEEDS TESTING
-    query = "SELECT card_id,name FROM cards WHERE profile_id = %s VALUES(profile_id)"
+    query = "SELECT card_id FROM cards WHERE profile_id = %s VALUES(profile_id)"
     args = (profId)
     cards = dbQ(query,args)
     jsonStr = '{"Cards": ['
     for card in cards:
-        jsonStr += '{"card_id": ' + str(card[0]) + ', ' + card[1][:-1] + ', {"Attributes": ['
-        queryC = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s VALUES(card_id)"
-        argsC = (card)
-        attributes = dbQ(queryC,argsC)
-        for att in attributes:
-            queryA = "SELECT attribute FROM attributes WHERE attribute_id = %s VALUES(attribute_id)"
-            argsA = (att)
-            value = dbQ(queryA,argsA)
-            jsonStr += '{"attribute_id": ' + str(att) + ', ' + str(value)
-            if att != attributes[-1]:
-                jsonStr += ', '
-        jsonStr += ']}'
+        jsonStr += getCard(card)
         if card != cards[-1]:
             jsonStr += ', '
     jsonStr += ']}'
