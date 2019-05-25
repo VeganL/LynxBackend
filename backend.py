@@ -102,7 +102,7 @@ def getProfiles(accId):
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
 
-    jsonStr = '{['
+    jsonStr = '{"account_id":' + str(accId) + ', "profiles": ['
     for i in range(len(profiles)):
         query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
         profAttr = dbQ(query)
