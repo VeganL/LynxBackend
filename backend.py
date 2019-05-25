@@ -64,12 +64,30 @@ def dbQ(query,args=None):
         connect.close()
         return result
 
-#Return JsonList
-def getAttributes(attIdList):
-    pass
+#Returns jsonString representation of an attribute
+def getAttribute(att_id):
+    query = "SELECT attribute FROM attributes where attribute_id = %s VALUES(attribute_id)"
+    args = (att_id)
+    att = dbQ(query,args)
+    jsonStr = f'{{"attribute_id": {str(att_id)}, {att}}}'
+    return jsonStr
 
-def insertAttributes(profId,attJsonList):
-    pass
+#Returns jsonString representation of a card
+def getCard(card_id):
+    queryC = "Select name FROM cards WHERE card_id = %s VALUES(card_id)"
+    argsC = (card_id)
+    card_name = dbQ(queryC,argsC)
+    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s VALUES(card_id)"
+    argsA = (card_id)
+    att_ids = dbQ(queryA,argsA)
+
+    jsonStr = f'{{"card_id": {str(card_id)}, "card_name": {card_name}, "attributes": ['
+    for att_id in att_ids:
+        jsonStr += f'{getAttribute(att_id)}'
+        if att_id != att_ids[-1]:
+            jsonStr += ', '
+    jsonStr += ']}'
+    return jsonStr
 
 #Register function, adds valid information to database
 def register(username,email,password):
@@ -94,45 +112,27 @@ def login(username,password):
     uid = dbQ(query,args)
     if len(uid) == 1:
         uidInt = json.dumps(uid[0])
-        getProfiles(uidInt[1])
+        print('{ "account_id":', uidInt[1], '}')
     else:
         print('{"err":"Invalid login information"}')
 
-def getProfiles(accId):
-    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
+def getProfiles(accId): # To-Do: Extend so profile attributes are also loaded
+    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + accId
     profiles = dbQ(query)
-
-    jsonStr = '{['
+    jsonStr = '{"Profiles": ['
     for i in range(len(profiles)):
-        query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
-        profAttr = dbQ(query)
-        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', "attributes":['
-        for r in range(len(profAttr)):
-            jsonStr += '{"attribute_id":' + str(profAttr[r][0]) + ', ' + profAttr[r][1][1:]
-            if profAttr[r] != profAttr[-1]:
-                jsonStr += ', '
-        jsonStr += ']}'
-        if profiles[i] != profiles[-1]:
-            jsonStr += ', '
+        if profiles[i] == profiles[-1]:
+            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:]
+        else:
+            jsonStr += '{"profile_id": ' + str(profiles[i][0]) + ', ' + profiles[i][1][1:] + ', '
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfile(accId,profileJson,attributesJson):
-    attrDict = json.loads(attributesJson)
+def insertProfile(accId,profileJson): #WIP
+    # profileJson: {"profile_name":"name","attributes":["{"name":"dudename"}",...]}
+    pass
 
-    query = "INSERT INTO profiles(account_id,title) VALUES (%s,%s)"
-    args = (accId,profileJson)
-    dbW(query,args,True)
-
-    query = "SELECT profile_id FROM profiles WHERE account_id = " + str(accId)
-    profId = dbQ(query)[-1][-1]
-
-    for key, value in attrDict.items():
-        query = "INSERT INTO attributes(profile_id,attribute) VALUES (%s,%s)"
-        args = (profId,'{"' + key + '":"' + str(value) + '"}')
-        dbW(query,args)
-
-def getProfileCards(profId): #WIP
+def getProfileCards(profId): #NEEDS TESTING
     query = "SELECT card_id,name FROM cards WHERE profile_id = %s VALUES(profile_id)"
     args = (profId)
     cards = dbQ(query,args)
@@ -158,10 +158,10 @@ def getProfileCards(profId): #WIP
 def insertProfileCard(profId,cardJson): #WIP
     pass
 
-def getWallet(accId): #WIP
+def getWallet(accId):
     pass
 
-def addCardWalletConf(accId,cardId): #WIP
+def addCardWalletConf(accId,cardId):
     pass
 
 
@@ -178,14 +178,13 @@ elif actionType == 'login':
     password = form.getvalue('password')
     login(username,password)
 ##############################################################
-elif actionType == 'get_profiles':
+elif actionType == 'get_profiles': #WIP
     accId = form.getvalue('account_id')
     getProfiles(accId)
-elif actionType == 'insert_profile':
+elif actionType == 'insert_profile': #WIP
     accId = form.getvalue('account_id')
-    profNameJson = form.getvalue('profile_name_json')
-    attrJson = form.getvalue('attributes_json')
-    insertProfile(accId,profNameJson,attrJson)
+    profJson = form.getvalue('profile_json')
+    insertProfile(accId,profJson)
 elif actionType == 'edit_profile': #WIP
     pass
 ### PROFILE CARDS ###
