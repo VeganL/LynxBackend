@@ -63,31 +63,6 @@ def dbQ(query,args=None):
         connect.close()
         return result
 
-#Returns jsonString representation of an attribute
-def getAttribute(att_id):
-    query = "SELECT attribute FROM attributes where attribute_id = %s"
-    args = (att_id)
-    att = dbQ(query,args)
-    jsonStr = f'{{"attribute_id": {str(att_id)}, {att}}}'
-    return jsonStr
-
-#Returns jsonString representation of a card
-def getCard(card_id):
-    queryC = "Select name FROM cards WHERE card_id = %s"
-    argsC = (card_id)
-    card_name = dbQ(queryC,argsC)
-    queryA = "SELECT attribute_id FROM attributes_cards WHERE card_id = %s"
-    argsA = (card_id)
-    att_ids = dbQ(queryA,argsA)
-
-    jsonStr = f'{{"card_id": {str(card_id)}, "card_name": {card_name}, "attributes": ['
-    for att_id in att_ids:
-        jsonStr += f'{getAttribute(att_id)}'
-        if att_id != att_ids[-1]:
-            jsonStr += ', '
-    jsonStr += ']}'
-    return jsonStr
-
 #Register function, adds valid information to database
 def register(username,email,password):
     query = "SELECT * FROM accounts WHERE username = '" + str(username) + "'"
@@ -149,7 +124,7 @@ def insertProfile(accId,profileJson,attributesJson):
         args = (profId,'{"' + key + '":"' + str(value) + '"}')
         dbW(query,args)
 
-def getProfileCards(profId): #TEST
+def getProfileCards(profId):
     query = "SELECT card_id, attribute_id_list FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
     jsonStr = '{"profile_cards": ['
@@ -159,7 +134,7 @@ def getProfileCards(profId): #TEST
         for r in range(len(attrIdList)):
             query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(attrIdList[r])
             attribute = dbQ(query)
-            jsonStr += attribute
+            jsonStr += attribute[0][0]
             if attrIdList[r] != attrIdList[-1]:
                 jsonStr += ', '
         jsonStr += ']}'
@@ -168,7 +143,7 @@ def getProfileCards(profId): #TEST
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfileCard(profId,attrListStr): #TEST
+def insertProfileCard(profId,attrListStr):
     query = "INSERT INTO cards(profile_id,attribute_id_list) VALUES (%s,%s)"
     if '{' in attrListStr or '}' in attrListStr:
         print('{"err":"Invalid attribute list format"}')
@@ -206,10 +181,10 @@ elif actionType == 'insert_profile':
 elif actionType == 'edit_profile': #WIP
     pass
 ### PROFILE CARDS ###
-elif actionType == 'get_profile_cards': #WIP
+elif actionType == 'get_profile_cards':
     profId = form.getvalue('profile_id')
     getProfileCards(profId)
-elif actionType == 'insert_profile_card': #WIP
+elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     attrListStr = form.getvalue('attr_json_array')
     insertProfileCard(profId,attrListStr)
