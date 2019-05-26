@@ -197,10 +197,11 @@ elif actionType == 'login':
 elif actionType == 'get_profiles': #WIP
     accId = form.getvalue('account_id')
     getProfiles(accId)
-elif actionType == 'insert_profile': #WIP
+elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
-    profJson = form.getvalue('profile_json')
-    insertProfile(accId,profJson)
+    profNameJson = form.getvalue('profile_name_json')
+    attrJson = form.getvalue('attributes_json')
+    insertProfile(accId,profNameJson,attrJson)
 elif actionType == 'edit_profile': #WIP
     pass
 ### PROFILE CARDS ###
