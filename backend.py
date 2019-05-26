@@ -54,7 +54,7 @@ def dbQ(query,args=None):
         else:
             cursor.execute(query,args)
         
-        for row in iterRow(cursor,10):
+        for row in iterRow(cursor,50):
             result.append(row)
     except:
         print('{"err":true}')
@@ -149,31 +149,32 @@ def insertProfile(accId,profileJson,attributesJson):
         args = (profId,'{"' + key + '":"' + str(value) + '"}')
         dbW(query,args)
 
-def getProfileCards(profId): #NEEDS TESTING
-    query = "SELECT card_id FROM cards WHERE profile_id = %s"
-    args = (profId)
-    cards = dbQ(query,args)
-    jsonStr = '{"Cards": ['
-    for card in cards:
-        jsonStr += getCard(card)
-        if card != cards[-1]:
+def getProfileCards(profId): #TEST
+    query = "SELECT card_id, attribute_id_list FROM cards WHERE profile_id = " + str(profId)
+    cards = dbQ(query)
+    jsonStr = '{"profile_cards": ['
+    for i in range(len(cards)):
+        attrIdList = json.loads(cards[i][1])
+        jsonStr += '{"card_id":' + str(cards[i][0]) + ', "attributes": ['
+        for r in range(len(attrIdList)):
+            query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(attrIdList[r])
+            attribute = dbQ(query)
+            jsonStr += attribute
+            if attrIdList[r] != attrIdList[-1]:
+                jsonStr += ', '
+        jsonStr += ']}'
+        if cards[i] != cards[-1]:
             jsonStr += ', '
     jsonStr += ']}'
     print(jsonStr)
 
-def insertProfileCard(profId,cardJson,attIdJson): #WIP
-    print(attIdJson)
-    attlist = json.loads(attIdJson)
-    query = "INSERT INTO cards(profile_id,name) VALUES(%s,%s)"
-    args = (profId,cardJson)
-    dbW(query,args)
-    queryC = "SELECT card_id WHERE profile_id = %s AND name = %s"
-    argsC = (profId,cardJson)
-    cardId = dbQ(queryC,argsC)
-    queryA = "INSERT INTO attributes_cards(card_id,attribute_id) VALUES(%s,%s)"
-    for attId in attlist:
-        argsA = (cardId,attId)
-        dbW(queryA,argsA)
+def insertProfileCard(profId,attrListStr): #TEST
+    query = "INSERT INTO cards(profile_id,attribute_id_list) VALUES (%s,%s)"
+    if '{' in attrListStr or '}' in attrListStr:
+        print('{"err":"Invalid attribute list format"}')
+    else:
+        args = (profId,attrListStr)
+        dbW(query,args)
 
 def getWallet(accId):
     pass
@@ -194,7 +195,7 @@ elif actionType == 'login':
     password = form.getvalue('password')
     login(username,password)
 ##############################################################
-elif actionType == 'get_profiles': #WIP
+elif actionType == 'get_profiles':
     accId = form.getvalue('account_id')
     getProfiles(accId)
 elif actionType == 'insert_profile':
@@ -210,9 +211,8 @@ elif actionType == 'get_profile_cards': #WIP
     getProfileCards(profId)
 elif actionType == 'insert_profile_card': #WIP
     profId = form.getvalue('profile_id')
-    cardJson = form.getvalue('card_json')
-    attidjson = form.getvalue('att_id_json')
-    insertProfileCard(profId,cardJson,attidjson)
+    attrListStr = form.getvalue('attr_json_array')
+    insertProfileCard(profId,attrListStr)
 elif actionType == 'edit_card': #WIP
     pass
 elif actionType == 'remove_card_profile': #WIP
