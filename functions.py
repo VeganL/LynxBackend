@@ -163,4 +163,6 @@ def getCardQr(cardId):
     print(jsonStr)
 
 def addCardWalletConf(accId,cardId):
-    pass
+    query = "INSERT INTO account_cards(account_id,card_id) VALUES (%s,%s)"
+    args = (accId,cardId)
+    dbW(query,args)
