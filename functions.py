@@ -147,22 +147,22 @@ def insertProfileCard(profId,attrListStr):
 
 def getWallet(accId):
     query = "SELECT card_id FROM account_cards WHERE account_id = " + str(accId)
-    raw = dbQ(query)
-    cardIds = raw[0]
+    cardIds = dbQ(query)
     jsonStr = '{"account_id":' + str(accId) + ', "wallet": ['
-    for i in range(len(cardIds)):
-        jsonStr += '{"card_id":' + str(cardIds[i]) + ', "attributes": ['
-        query = "SELECT attribute_id_list FROM cards WHERE card_id = " + str(cardIds[i])
-        cardAttr = dbQ(query)
-        cardAttr = json.loads(cardAttr[0][0])
-        for r in range(len(cardAttr)):
-            query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[r])
-            attr = dbQ(query)
-            jsonStr += attr[0][0]
-            if cardAttr[r] != cardAttr[-1]:
-                jsonStr += ', '
-        jsonStr += ']}'
-        if cardIds[i] != cardIds[-1]:
+    for x in range(len(cardIds)):
+        for i in range(len(cardIds[x])):
+            jsonStr += '{"card_id":' + str(cardIds[x][i]) + ', "attributes": ['
+            query = "SELECT attribute_id_list FROM cards WHERE card_id = " + str(cardIds[x][i])
+            cardAttr = dbQ(query)
+            cardAttr = json.loads(cardAttr[0][0])
+            for r in range(len(cardAttr)):
+                query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[r])
+                attr = dbQ(query)
+                jsonStr += attr[0][0]
+                if cardAttr[r] != cardAttr[-1]:
+                    jsonStr += ', '
+            jsonStr += ']}'
+        if cardIds[x] != cardIds[-1]:
             jsonStr += ', '
     jsonStr += ']}'
     print(jsonStr)
