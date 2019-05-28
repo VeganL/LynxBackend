@@ -156,7 +156,7 @@ def getCardQr(cardId):
     for i in range(len(cardAttr)):
         query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[i])
         attr = dbQ(query)
-        jsonStr += attr
+        jsonStr += attr[0][0]
         if cardAttr[i] != cardAttr[-1]:
             jsonStr += ', '
     jsonStr += ']}'
