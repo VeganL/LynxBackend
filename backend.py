@@ -47,7 +47,8 @@ elif actionType == 'get_wallet': #WIP
     getWallet(accId)
 elif actionType == 'get_card_qr': #WIP
     #automates card download process
-    pass
+    cardId = form.getvalue('card_id')
+    getCardQr(cardId)
 elif actionType == 'add_card_wallet_conf': #WIP
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')

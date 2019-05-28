@@ -148,5 +148,19 @@ def insertProfileCard(profId,attrListStr):
 def getWallet(accId):
     pass
 
+def getCardQr(cardId):
+    query = "SELECT attribute_id_list FROM cards WHERE card_id = " + str(cardId)
+    cardAttr = dbQ(query)
+    cardAttr = json.loads(cardAttr[0][0])
+    jsonStr = '{"card_id":' + cardId + ', "attributes": ['
+    for i in range(len(cardAttr)):
+        query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[i])
+        attr = dbQ(query)
+        jsonStr += attr
+        if cardAttr[i] != cardAttr[-1]:
+            jsonStr += ', '
+    jsonStr += ']}'
+    print(jsonStr)
+
 def addCardWalletConf(accId,cardId):
     pass
