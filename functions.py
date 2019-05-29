@@ -173,8 +173,10 @@ def editProfileCard(cardId,attrListStr):
         args = (attrListStr,cardId)
         dbW(query,args)
 
-def removeProfileCard():
-    pass
+def removeProfileCard(cardId):
+    query  = "DELETE FROM cards WHERE card_id = %s"
+    args = (cardId)
+    dbW(query,args)
 
 def getWallet(accId):
     query = "SELECT card_id FROM account_cards WHERE account_id = " + str(accId)
@@ -217,5 +219,7 @@ def addCardWalletConf(accId,cardId):
     args = (accId,cardId)
     dbW(query,args)
 
-def removeCardWallet():
-    pass
+def removeCardWallet(cardId):
+    query = "DELETE FROM account_cards WHERE card_id = %s"
+    args = (cardId)
+    dbW(query,args)
