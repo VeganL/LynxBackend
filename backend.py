@@ -39,8 +39,10 @@ elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     attrListStr = form.getvalue('attr_json_array')
     insertProfileCard(profId,attrListStr)
-elif actionType == 'edit_profile_card': #WIP
-    pass
+elif actionType == 'edit_profile_card':
+    cardId = form.getvalue('card_id')
+    attrListStr = form.getvalue('attr_json_array')
+    editProfileCard(cardId,attrListStr)
 elif actionType == 'remove_profile_card': #WIP
     pass
 ##############################################################

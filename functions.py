@@ -165,8 +165,13 @@ def insertProfileCard(profId,attrListStr):
         args = (profId,attrListStr)
         dbW(query,args)
 
-def editProfileCard():
-    pass
+def editProfileCard(cardId,attrListStr):
+    query = "UPDATE cards SET attribute_id_list = %s WHERE card_id = %s"
+    if '{' in attrListStr or '}' in attrListStr:
+        print('{"err":"Invalid attribute list format"}')
+    else:
+        args = (attrListStr,cardId)
+        dbW(query,args)
 
 def removeProfileCard():
     pass
