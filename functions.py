@@ -118,6 +118,26 @@ def insertProfile(accId,profileJson,attributesJson):
         args = (profId,'{"' + key + '":"' + str(value) + '"}')
         dbW(query,args)
 
+def editProfile(profId,attributesJson):
+    attrDict = json.loads(attributesJson)
+    attrStrL = []
+    for key, value in attrDict.items():
+        attrStrL.append('{"' + key + '":"' + str(value) + '"}')
+
+    query = "SELECT attribute_id FROM attributes WHERE profile_id = " + str(profId)
+    raw = dbQ(query)
+    attrIdL = []
+    for i in raw:
+        attrIdL.append(i[0])
+
+    if len(attrIdL) == len(attrStrL):
+        query = "UPDATE attributes SET attribute = %s WHERE attribute_id = %s"
+        for i in range(len(attrIdL)):
+            args = (attrStrL[i],attrIdL[i])
+            dbW(query,args)
+    else:
+        print('{"err":"JSON string is in an invalid format"}')
+
 def getProfileCards(profId):
     query = "SELECT card_id, attribute_id_list FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
@@ -144,6 +164,12 @@ def insertProfileCard(profId,attrListStr):
     else:
         args = (profId,attrListStr)
         dbW(query,args)
+
+def editProfileCard():
+    pass
+
+def removeProfileCard():
+    pass
 
 def getWallet(accId):
     query = "SELECT card_id FROM account_cards WHERE account_id = " + str(accId)
@@ -185,3 +211,6 @@ def addCardWalletConf(accId,cardId):
     query = "INSERT INTO account_cards(account_id,card_id) VALUES (%s,%s)"
     args = (accId,cardId)
     dbW(query,args)
+
+def removeCardWallet():
+    pass

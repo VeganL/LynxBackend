@@ -27,8 +27,10 @@ elif actionType == 'insert_profile':
     profNameJson = form.getvalue('profile_name_json')
     attrJson = form.getvalue('attributes_json')
     insertProfile(accId,profNameJson,attrJson)
-elif actionType == 'edit_profile': #WIP
-    pass
+elif actionType == 'edit_profile': #TEST
+    profId = form.getvalue('profile_id')
+    attrJson = form.getvalue('attributes_json')
+    editProfile(profId,attrJson)
 ### PROFILE CARDS ###
 elif actionType == 'get_profile_cards':
     profId = form.getvalue('profile_id')
@@ -37,19 +39,18 @@ elif actionType == 'insert_profile_card':
     profId = form.getvalue('profile_id')
     attrListStr = form.getvalue('attr_json_array')
     insertProfileCard(profId,attrListStr)
-elif actionType == 'edit_card': #WIP
+elif actionType == 'edit_profile_card': #WIP
     pass
-elif actionType == 'remove_card_profile': #WIP
+elif actionType == 'remove_profile_card': #WIP
     pass
 ##############################################################
-elif actionType == 'get_wallet': #WIP
+elif actionType == 'get_wallet':
     accId = form.getvalue('account_id')
     getWallet(accId)
-elif actionType == 'get_card_qr': #WIP
-    #automates card download process
+elif actionType == 'get_card_qr':
     cardId = form.getvalue('card_id')
     getCardQr(cardId)
-elif actionType == 'add_card_wallet_conf': #WIP
+elif actionType == 'add_card_wallet_conf':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
