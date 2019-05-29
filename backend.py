@@ -43,8 +43,9 @@ elif actionType == 'edit_profile_card':
     cardId = form.getvalue('card_id')
     attrListStr = form.getvalue('attr_json_array')
     editProfileCard(cardId,attrListStr)
-elif actionType == 'remove_profile_card': #WIP
-    pass
+elif actionType == 'remove_profile_card':
+    cardId = form.getvalue('card_id')
+    removeProfileCard(cardId)
 ##############################################################
 elif actionType == 'get_wallet':
     accId = form.getvalue('account_id')
@@ -56,8 +57,10 @@ elif actionType == 'add_card_wallet_conf':
     accId = form.getvalue('account_id')
     cardId = form.getvalue('card_id')
     addCardWalletConf(accId,cardId)
-elif actionType == 'remove_card_wallet': #WIP
-    pass
+elif actionType == 'remove_card_wallet':
+    cardId = form.getvalue('card_id')
+    accId = form.getvalue('account_id')
+    removeCardWallet(cardId,accId)
 ##############################################################
 else: #The following is to test if any changes to code breaks code in-browser; default response
     foo = { "Lynx Backend Script": "This is the default returned JSON string for backend.py", "err": True }
