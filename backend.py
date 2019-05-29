@@ -27,7 +27,7 @@ elif actionType == 'insert_profile':
     profNameJson = form.getvalue('profile_name_json')
     attrJson = form.getvalue('attributes_json')
     insertProfile(accId,profNameJson,attrJson)
-elif actionType == 'edit_profile': #TEST
+elif actionType == 'edit_profile':
     profId = form.getvalue('profile_id')
     attrJson = form.getvalue('attributes_json')
     editProfile(profId,attrJson)
