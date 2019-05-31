@@ -92,7 +92,7 @@ def getProfiles(accId):
     for i in range(len(profiles)):
         query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
         profAttr = dbQ(query)
-        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1] + ', ' + profiles[i][2][1:-1] + ', "attributes":['
+        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', ' + profiles[i][2][1:-1] + ', "attributes":['
         for r in range(len(profAttr)):
             jsonStr += '{"attribute_id":' + str(profAttr[r][0]) + ', ' + profAttr[r][1][1:]
             if profAttr[r] != profAttr[-1]:
