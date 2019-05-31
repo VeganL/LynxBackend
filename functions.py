@@ -85,14 +85,14 @@ def login(username,password):
 
 # Get Profile Attributes
 def getProfiles(accId):
-    query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
+    query = "SELECT profile_id, title, icon FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
 
     jsonStr = '{"account_id":' + str(accId) + ', "profiles": ['
     for i in range(len(profiles)):
         query = "SELECT attribute_id, attribute FROM attributes WHERE profile_id = " + str(profiles[i][0])
         profAttr = dbQ(query)
-        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1][1:-1] + ', "attributes":['
+        jsonStr += '{"profile_id":' + str(profiles[i][0]) + ', ' + profiles[i][1] + profiles[i][2][1:-1] + ', "attributes":['
         for r in range(len(profAttr)):
             jsonStr += '{"attribute_id":' + str(profAttr[r][0]) + ', ' + profAttr[r][1][1:]
             if profAttr[r] != profAttr[-1]:
@@ -140,7 +140,7 @@ def editProfile(profId,attributesJson):
     else:
         print('{"err":"JSON string is in an invalid format"}')
 
-# Get cards assiciated with a profile and the attributes associated with the cards
+# Get cards assiciated with a profile and the attributes associated with the cardss
 def getProfileCards(profId):
     query = "SELECT card_id, attribute_id_list FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
