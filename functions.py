@@ -75,12 +75,11 @@ def register(username,email,password):
 
 #Login function, returns account_id connected to valid username and password
 def login(username,password):
-    query = "SELECT account_id FROM accounts WHERE username = %s AND password = %s"
+    query = "SELECT account_id, username, password FROM accounts WHERE username = %s AND password = %s"
     args = (username,password)
     uid = dbQ(query,args)
-    if len(uid) == 1:
-        uidInt = json.dumps(uid[0])
-        getProfiles(uidInt[1])
+    if len(uid) == 1 and uid[0][1] == username and uid[0][2] == password:
+        getProfiles(uid[0][0])
     else:
         print('{"err":"Invalid login information"}')
 
