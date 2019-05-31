@@ -83,6 +83,7 @@ def login(username,password):
     else:
         print('{"err":"Invalid login information"}')
 
+# Get Profile Attributes
 def getProfiles(accId):
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
@@ -102,6 +103,7 @@ def getProfiles(accId):
     jsonStr += ']}'
     print(jsonStr)
 
+# Make new profile and add its attributes
 def insertProfile(accId,profileJson,attributesJson):
     attrDict = json.loads(attributesJson)
 
@@ -117,6 +119,7 @@ def insertProfile(accId,profileJson,attributesJson):
         args = (profId,'{"' + key + '":"' + str(value) + '"}')
         dbW(query,args)
 
+# Edit a profile's attributes
 def editProfile(profId,attributesJson):
     attrDict = json.loads(attributesJson)
     attrStrL = []
@@ -137,6 +140,7 @@ def editProfile(profId,attributesJson):
     else:
         print('{"err":"JSON string is in an invalid format"}')
 
+# Get cards assiciated with a profile and the attributes associated with the cards
 def getProfileCards(profId):
     query = "SELECT card_id, attribute_id_list FROM cards WHERE profile_id = " + str(profId)
     cards = dbQ(query)
