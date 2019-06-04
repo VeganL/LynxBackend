@@ -182,17 +182,17 @@ def getWallet(accId):
     jsonStr = '{"account_id":' + str(accId) + ', "wallet": ['
     for x in range(len(cardIds)):
         for i in range(len(cardIds[x])):
-            jsonStr += '{"card_id":' + str(cardIds[x][i]) + ', "attributes": ['
+            jsonStr += '{"card_id":' + str(cardIds[x][i]) + ', "attributes": {'
             query = "SELECT attribute_id_list FROM cards WHERE card_id = " + str(cardIds[x][i])
             cardAttr = dbQ(query)
             cardAttr = json.loads(cardAttr[0][0])
             for r in range(len(cardAttr)):
                 query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[r])
                 attr = dbQ(query)
-                jsonStr += attr[0][0]
+                jsonStr += attr[0][0][1:-1]
                 if cardAttr[r] != cardAttr[-1]:
                     jsonStr += ', '
-            jsonStr += ']}'
+            jsonStr += '}'
         if cardIds[x] != cardIds[-1]:
             jsonStr += ', '
     jsonStr += ']}'
@@ -202,14 +202,14 @@ def getCardQr(cardId):
     query = "SELECT attribute_id_list FROM cards WHERE card_id = " + str(cardId)
     cardAttr = dbQ(query)
     cardAttr = json.loads(cardAttr[0][0])
-    jsonStr = '{"card_id":' + str(cardId) + ', "attributes": ['
+    jsonStr = '{"card_id":' + str(cardId) + ', "attributes": {'
     for i in range(len(cardAttr)):
         query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(cardAttr[i])
         attr = dbQ(query)
-        jsonStr += attr[0][0]
+        jsonStr += attr[0][0][1:-1]
         if cardAttr[i] != cardAttr[-1]:
             jsonStr += ', '
-    jsonStr += ']}' 
+    jsonStr += '}}' 
     print(jsonStr)
 
 def addCardWalletConf(accId,cardId):
