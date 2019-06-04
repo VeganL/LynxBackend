@@ -1,4 +1,4 @@
-import json, cgi, cgitb
+import json, cgi, cgitb, os, sys, subprocess
 from mysql.connector import MySQLConnection, Error
 from pythonMySQL_dbConfig import readDbConfig
 
@@ -83,6 +83,12 @@ def login(username,password):
     else:
         print('{"err":"Invalid login information"}')
 
+def insertPhoto(photo):
+    uploadDir = '/var/www/html/LynxPhotos/'
+    if photo.filename:
+        fn = os.path.basename(photo.filename)
+        open(uploadDir + fn, 'wb').write(photo.file.read())
+
 def getProfiles(accId):
     query = "SELECT profile_id, title FROM profiles WHERE account_id = " + str(accId)
     profiles = dbQ(query)
@@ -152,7 +158,7 @@ def getProfileCards(profId):
                 jsonStr += ', '
         jsonStr += '}'
         if cards[i] != cards[-1]:
-            jsonStr += ', '
+            jsonStr += '}, '
     jsonStr += '}]}'
     print(jsonStr)
 
@@ -194,7 +200,7 @@ def getWallet(accId):
                     jsonStr += ', '
             jsonStr += '}'
         if cardIds[x] != cardIds[-1]:
-            jsonStr += ', '
+            jsonStr += '}, '
     jsonStr += ']}'
     print(jsonStr)
 
@@ -218,6 +224,6 @@ def addCardWalletConf(accId,cardId):
     dbW(query,args)
 
 def removeCardWallet(cardId,accId):
-    query = "DELETE FROM account_cards WHERE card_id = %s and account_id = %s"
+    query = "DELETEalter table attributes auto_increment = 1;alter table attributes auto_increment = 1;alter table attributes auto_increment = 1;alter table attributes auto_increment = 1; FROM account_cards WHERE card_id = %s and account_id = %s"
     args = (cardId,accId)
     dbW(query,args)

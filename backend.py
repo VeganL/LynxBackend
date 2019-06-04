@@ -26,10 +26,14 @@ elif actionType == 'insert_profile':
     accId = form.getvalue('account_id')
     profNameJson = form.getvalue('profile_name_json')
     attrJson = form.getvalue('attributes_json')
+    photo = form['filename']
+    insertPhoto(photo)
     insertProfile(accId,profNameJson,attrJson)
 elif actionType == 'edit_profile':
     profId = form.getvalue('profile_id')
     attrJson = form.getvalue('attributes_json')
+    photo = form['filename']
+    insertPhoto(photo)
     editProfile(profId,attrJson)
 ### PROFILE CARDS ###
 elif actionType == 'get_profile_cards':
