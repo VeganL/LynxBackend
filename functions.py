@@ -153,7 +153,7 @@ def getProfileCards(profId):
         jsonStr += '}'
         if cards[i] != cards[-1]:
             jsonStr += ', '
-    jsonStr += ']}'
+    jsonStr += '}]}'
     print(jsonStr)
 
 def insertProfileCard(profId,attrListStr):
@@ -209,7 +209,7 @@ def getCardQr(cardId):
         jsonStr += attr[0][0]
         if cardAttr[i] != cardAttr[-1]:
             jsonStr += ', '
-    jsonStr += '}]}' 
+    jsonStr += ']}' 
     print(jsonStr)
 
 def addCardWalletConf(accId,cardId):
