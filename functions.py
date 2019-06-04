@@ -147,7 +147,7 @@ def getProfileCards(profId):
         for r in range(len(attrIdList)):
             query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(attrIdList[r])
             attribute = dbQ(query)
-            jsonStr += attribute[0][0]
+            jsonStr += attribute[0][0][1:-1]
             if attrIdList[r] != attrIdList[-1]:
                 jsonStr += ', '
         jsonStr += '}'
