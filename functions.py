@@ -201,7 +201,7 @@ def getWallet(accId):
             jsonStr += '}'
         if cardIds[x] != cardIds[-1]:
             jsonStr += '}, '
-    jsonStr += ']}'
+    jsonStr += '}]}'
     print(jsonStr)
 
 def getCardQr(cardId):
