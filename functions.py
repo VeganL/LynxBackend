@@ -147,14 +147,14 @@ def getProfileCards(profId):
     jsonStr = '{"profile_cards": ['
     for i in range(len(cards)):
         attrIdList = json.loads(cards[i][1])
-        jsonStr += '{"card_id":' + str(cards[i][0]) + ', "attributes": ['
+        jsonStr += '{"card_id":' + str(cards[i][0]) + ', "attributes": {'
         for r in range(len(attrIdList)):
             query = "SELECT attribute FROM attributes WHERE attribute_id = " + str(attrIdList[r])
             attribute = dbQ(query)
             jsonStr += attribute[0][0]
             if attrIdList[r] != attrIdList[-1]:
                 jsonStr += ', '
-        jsonStr += ']}'
+        jsonStr += '}'
         if cards[i] != cards[-1]:
             jsonStr += ', '
     jsonStr += ']}'
